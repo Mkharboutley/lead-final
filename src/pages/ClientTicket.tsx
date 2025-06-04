@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { MessageCircle, Car, User, Calendar, Bell, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import VoiceChatModule from '../components/VoiceChatModule';
+import CountdownTimer from '../components/CountdownTimer';
 import { useTicketStatus } from '../hooks/useTicketStatus';
 import { useVoiceNotifications } from '../hooks/useVoiceNotifications';
 
@@ -61,6 +62,13 @@ const ClientTicket: React.FC = () => {
     }
   };
 
+  const handleTimerComplete = () => {
+    toast({
+      title: "Worker Should Have Arrived!",
+      description: "Your car should be ready for pickup now.",
+    });
+  };
+
   return (
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="mb-6">
@@ -100,6 +108,15 @@ const ClientTicket: React.FC = () => {
               </Button>
             </CardContent>
           </Card>
+        )}
+        
+        {/* Countdown Timer - Show when worker is assigned */}
+        {ticket && ticket.status === 'assigned' && ticket.eta_minutes && ticket.assigned_at && (
+          <CountdownTimer
+            etaMinutes={ticket.eta_minutes}
+            assignedAt={ticket.assigned_at.toDate()}
+            onComplete={handleTimerComplete}
+          />
         )}
         
         {/* Voice Chat Module */}
@@ -149,7 +166,7 @@ const ClientTicket: React.FC = () => {
                   {ticket.status === 'assigned' && ticket.eta_minutes && (
                     <div className="flex items-center gap-2 text-sm">
                       <Clock className="h-4 w-4 text-gray-500" />
-                      <span className="font-medium">ETA:</span>
+                      <span className="font-medium">Original ETA:</span>
                       <span>{ticket.eta_minutes} minutes</span>
                     </div>
                   )}

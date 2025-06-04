@@ -9,6 +9,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Car, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { createTicket, getLatestTicketNumber } from '../services/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
+import { getFirestoreInstance } from '../services/firebase';
 
 const CreateTicketForm: React.FC = () => {
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ const CreateTicketForm: React.FC = () => {
       const latestTicketNumber = await getLatestTicketNumber();
       const newTicketNumber = latestTicketNumber + 1;
 
-      // Create ticket data with minimal required fields - removed clientName, clientPhoneNumber, and guest_name
+      // Create ticket data with minimal required fields - temporarily set ticket_url to empty
       const ticketData = {
         ticket_number: newTicketNumber,
         visitor_id: generateUniqueId(),
@@ -53,7 +55,7 @@ const CreateTicketForm: React.FC = () => {
         cancelled_at: null,
         completed_at: null,
         eta_minutes: null,
-        ticket_url: `${window.location.origin}/ticket/${generateUniqueId()}`,
+        ticket_url: '', // Will be updated after creation
         pre_alert_sent: false,
         client_token: generateUniqueId(),
         location: '',
@@ -62,7 +64,20 @@ const CreateTicketForm: React.FC = () => {
         voice_message_count: 0
       };
 
+      console.log('Creating ticket with data:', ticketData);
       const ticketId = await createTicket(ticketData);
+      console.log('Ticket created with ID:', ticketId);
+
+      // Now update the ticket with the correct URL using the real document ID
+      const firestore = getFirestoreInstance();
+      const ticketRef = doc(firestore, 'tickets', ticketId);
+      const correctTicketUrl = `${window.location.origin}/ticket/${ticketId}`;
+      
+      await updateDoc(ticketRef, {
+        ticket_url: correctTicketUrl
+      });
+
+      console.log('Ticket URL updated to:', correctTicketUrl);
 
       toast({
         title: "Ticket Created Successfully",

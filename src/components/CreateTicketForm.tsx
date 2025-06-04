@@ -19,7 +19,7 @@ const CreateTicketForm: React.FC = () => {
   const [error, setError] = useState('');
   const [showQR, setShowQR] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
-  const [ticketUrl, setTicketUrl] = useState<string>('');
+  const [ticketData, setTicketData] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     plateNumber: '',
@@ -38,7 +38,7 @@ const CreateTicketForm: React.FC = () => {
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(url, {
         width: 400,
-        margin: 2,
+        margin: 1,
         color: {
           dark: '#000000',
           light: '#FFFFFF'
@@ -80,10 +80,7 @@ const CreateTicketForm: React.FC = () => {
         ticket_url: '',
         pre_alert_sent: false,
         client_token: generateUniqueId(),
-        location: '',
-        description: '',
-        priority: 'medium',
-        voice_message_count: 0
+        created_at: new Date()
       };
 
       const ticketId = await createTicket(newTicketData);
@@ -95,8 +92,8 @@ const CreateTicketForm: React.FC = () => {
         ticket_url: correctTicketUrl
       });
 
-      setTicketUrl(correctTicketUrl);
       await generateQRCode(correctTicketUrl);
+      setTicketData(newTicketData);
       setShowQR(true);
 
     } catch (err) {
@@ -110,21 +107,27 @@ const CreateTicketForm: React.FC = () => {
   const handleClose = () => {
     setShowQR(false);
     setQrCodeUrl('');
-    setTicketUrl('');
+    setTicketData(null);
     setFormData({ plateNumber: '', carModel: '' });
     navigate('/entry');
   };
 
-  if (showQR && qrCodeUrl) {
+  if (showQR && qrCodeUrl && ticketData) {
     return (
-      <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4">
-        <div className="max-w-sm w-full">
-          <div className="bg-white rounded-2xl p-6 shadow-2xl">
+      <div className="fixed inset-0 bg-black/95 flex items-center justify-center p-4">
+        <div className="w-full max-w-sm">
+          <div className="bg-white rounded-3xl p-8 text-center">
             <img 
               src={qrCodeUrl} 
               alt="QR Code"
-              className="w-full h-auto"
+              className="w-full h-auto mb-6"
             />
+            <div className="space-y-2 text-black">
+              <p className="text-lg font-bold">رقم التذكرة: {String(ticketData.ticket_number).padStart(4, '0')}</p>
+              <p>رقم اللوحة: {ticketData.plate_number}</p>
+              <p>موديل السيارة: {ticketData.car_model}</p>
+              <p>وقت الدخول: {ticketData.created_at.toLocaleString()}</p>
+            </div>
           </div>
           <Button
             onClick={handleClose}

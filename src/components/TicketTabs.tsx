@@ -7,6 +7,8 @@ import TicketList from './TicketList';
 interface TicketTabsProps {
   tickets: Ticket[];
   messageCounts?: Record<string, number>;
+  unreadCounts?: Record<string, number>;
+  latestAudioUrls?: Record<string, string>;
   onTicketSelect?: (ticket: Ticket) => void;
   onStatusUpdate?: (ticketId: string, status: TicketStatus) => void;
   onAssignWorker?: (ticket: Ticket) => void;
@@ -16,6 +18,8 @@ interface TicketTabsProps {
 const TicketTabs: React.FC<TicketTabsProps> = ({
   tickets,
   messageCounts = {},
+  unreadCounts = {},
+  latestAudioUrls = {},
   onTicketSelect,
   onStatusUpdate,
   onAssignWorker,
@@ -64,6 +68,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
         <TicketList 
           tickets={tickets} 
           messageCounts={messageCounts}
+          unreadCounts={unreadCounts}
+          latestAudioUrls={latestAudioUrls}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
           onAssignWorker={onAssignWorker}
@@ -75,6 +81,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
         <TicketList 
           tickets={filterTicketsByStatus('running')} 
           messageCounts={messageCounts}
+          unreadCounts={unreadCounts}
+          latestAudioUrls={latestAudioUrls}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
           onAssignWorker={onAssignWorker}
@@ -86,6 +94,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
         <TicketList 
           tickets={filterTicketsByStatus('requested')} 
           messageCounts={messageCounts}
+          unreadCounts={unreadCounts}
+          latestAudioUrls={latestAudioUrls}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
           onAssignWorker={onAssignWorker}
@@ -97,6 +107,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
         <TicketList 
           tickets={filterTicketsByStatus('assigned')} 
           messageCounts={messageCounts}
+          unreadCounts={unreadCounts}
+          latestAudioUrls={latestAudioUrls}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
           onAssignWorker={onAssignWorker}
@@ -108,6 +120,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
         <TicketList 
           tickets={filterTicketsByStatus('completed')} 
           messageCounts={messageCounts}
+          unreadCounts={unreadCounts}
+          latestAudioUrls={latestAudioUrls}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
           onAssignWorker={onAssignWorker}

@@ -6,7 +6,9 @@ import TicketListItem from './TicketListItem';
 
 interface TicketListProps {
   tickets: Ticket[];
-  messageCounts: Record<string, number>;
+  messageCounts?: Record<string, number>;
+  unreadCounts?: Record<string, number>;
+  latestAudioUrls?: Record<string, string>;
   onTicketSelect: (ticket: Ticket) => void;
   onStatusUpdate: (ticketId: string, status: TicketStatus) => void;
   onAssignWorker: (ticket: Ticket) => void;
@@ -15,18 +17,14 @@ interface TicketListProps {
 
 const TicketList: React.FC<TicketListProps> = ({
   tickets,
-  messageCounts,
+  messageCounts = {},
+  unreadCounts = {},
+  latestAudioUrls = {},
   onTicketSelect,
   onStatusUpdate,
   onAssignWorker,
   selectedTicketId
 }) => {
-  // Simulate unread messages and latest audio URLs for demo
-  const getTicketData = (ticketId: string) => ({
-    hasUnreadMessages: Math.random() > 0.7,
-    latestAudioUrl: Math.random() > 0.5 ? 'mock-audio-url' : undefined
-  });
-
   return (
     <ScrollArea className="h-[600px] pr-4">
       <div className="space-y-4">
@@ -35,22 +33,19 @@ const TicketList: React.FC<TicketListProps> = ({
             No tickets found
           </div>
         ) : (
-          tickets.map((ticket) => {
-            const ticketData = getTicketData(ticket.id);
-            return (
-              <TicketListItem
-                key={ticket.id}
-                ticket={ticket}
-                messageCount={messageCounts[ticket.id] || 0}
-                onTicketSelect={onTicketSelect}
-                onStatusUpdate={onStatusUpdate}
-                onAssignWorker={onAssignWorker}
-                isSelected={selectedTicketId === ticket.id}
-                hasUnreadMessages={ticketData.hasUnreadMessages}
-                latestAudioUrl={ticketData.latestAudioUrl}
-              />
-            );
-          })
+          tickets.map((ticket) => (
+            <TicketListItem
+              key={ticket.id}
+              ticket={ticket}
+              messageCount={messageCounts[ticket.id] || 0}
+              onTicketSelect={onTicketSelect}
+              onStatusUpdate={onStatusUpdate}
+              onAssignWorker={onAssignWorker}
+              isSelected={selectedTicketId === ticket.id}
+              hasUnreadMessages={unreadCounts[ticket.id] > 0}
+              latestAudioUrl={latestAudioUrls[ticket.id]}
+            />
+          ))
         )}
       </div>
     </ScrollArea>

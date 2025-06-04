@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -17,7 +16,7 @@ import {
   Settings,
   UserCog
 } from 'lucide-react';
-import { useTickets } from '../hooks/useTickets';
+import { useTicketData } from '../hooks/useTicketData';
 import { useAdminConfig } from '../hooks/useAdminConfig';
 import TicketTabs from '../components/TicketTabs';
 import DashboardStats from '../components/DashboardStats';
@@ -25,7 +24,13 @@ import DriverManagement from '../components/DriverManagement';
 import ETAConfiguration from '../components/ETAConfiguration';
 
 const Dashboard: React.FC = () => {
-  const { tickets, isLoading } = useTickets();
+  const { 
+    tickets, 
+    messageCounts, 
+    unreadCounts, 
+    latestAudioUrls, 
+    isLoading 
+  } = useTicketData();
   const { 
     drivers, 
     etaConfig, 
@@ -150,6 +155,9 @@ const Dashboard: React.FC = () => {
                 <CardContent>
                   <TicketTabs 
                     tickets={tickets}
+                    messageCounts={messageCounts}
+                    unreadCounts={unreadCounts}
+                    latestAudioUrls={latestAudioUrls}
                     onTicketSelect={handleTicketSelect}
                     onStatusUpdate={handleStatusUpdate}
                     onAssignWorker={handleAssignWorker}

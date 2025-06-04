@@ -49,7 +49,7 @@ const ClientTicket: React.FC = () => {
         <Button 
           variant="ghost" 
           size="sm"
-          onClick={() => navigate('/entry')}
+          onClick={() => navigate('/create-ticket')}
           className="text-white hover:bg-gray-800"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -95,7 +95,7 @@ const ClientTicket: React.FC = () => {
           {/* Close Button */}
           <div className="mt-8">
             <Button 
-              onClick={() => navigate('/entry')}
+              onClick={() => navigate('/create-ticket')}
               className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg rounded-xl"
             >
               إغلاق

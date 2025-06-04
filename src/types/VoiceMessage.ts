@@ -1,10 +1,8 @@
 
 export interface VoiceMessage {
   id: string;
-  ticketId: string;
-  senderId: string;
-  audioUrl: string;
-  duration: number;
-  timestamp: Date;
+  sender: 'client' | 'admin';
+  storage_path: string; // e.g., "tickets/11/1682199812639.webm"
+  timestamp: number; // Use `number`, not `Date`
   isPlaying?: boolean;
 }

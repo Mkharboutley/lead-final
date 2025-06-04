@@ -25,13 +25,10 @@ export const createVoiceMessage = async (
     const messageData: VoiceMessage = {
       ...voiceMessage,
       id: messageId,
-      timestamp: new Date(),
+      timestamp: Date.now(),
     };
     
-    await set(newMessageRef, {
-      ...messageData,
-      timestamp: messageData.timestamp.toISOString(), // Store as ISO string for Firebase
-    });
+    await set(newMessageRef, messageData);
     
     console.log('Voice message created:', messageId, 'for ticket:', ticketId);
     return messageId;
@@ -57,12 +54,12 @@ export const getVoiceMessages = async (ticketId: string): Promise<VoiceMessage[]
         messages.push({
           ...messageData,
           id: messageId,
-          timestamp: new Date(messageData.timestamp), // Convert back to Date
+          timestamp: messageData.timestamp, // Already a number
         });
       });
       
       // Sort by timestamp (newest first)
-      messages.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+      messages.sort((a, b) => b.timestamp - a.timestamp);
     }
     
     console.log(`Retrieved ${messages.length} voice messages for ticket:`, ticketId);
@@ -86,7 +83,7 @@ export const getVoiceMessage = async (ticketId: string, messageId: string): Prom
       return {
         ...data,
         id: messageId,
-        timestamp: new Date(data.timestamp),
+        timestamp: data.timestamp, // Already a number
       };
     }
     
@@ -166,12 +163,12 @@ export const subscribeToVoiceMessages = (
           messages.push({
             ...messageData,
             id: messageId,
-            timestamp: new Date(messageData.timestamp),
+            timestamp: messageData.timestamp, // Already a number
           });
         });
         
         // Sort by timestamp (newest first)
-        messages.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+        messages.sort((a, b) => b.timestamp - a.timestamp);
       }
       
       callback(messages);
@@ -206,7 +203,7 @@ export const subscribeToVoiceMessage = (
         callback({
           ...data,
           id: messageId,
-          timestamp: new Date(data.timestamp),
+          timestamp: data.timestamp, // Already a number
         });
       } else {
         callback(null);
@@ -260,7 +257,7 @@ export const sendMessage = async (ticketId: string, message: any): Promise<void>
     
     await set(newMessageRef, {
       ...message,
-      timestamp: new Date().toISOString(),
+      timestamp: Date.now(),
     });
     
     console.log('General message sent for ticket:', ticketId);

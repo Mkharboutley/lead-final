@@ -47,35 +47,38 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] relative bg-[#1a1f2e] flex items-center justify-center p-4 overflow-hidden">
-      {/* Animated background waves */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-purple-500/10 animate-pulse" />
+    <div className="min-h-[100dvh] relative bg-[#0a0f1a] flex items-center justify-center overflow-hidden">
+      {/* Animated background with gradients */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-indigo-900/20" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(17,24,39,0.9),rgba(17,24,39,1))]" />
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full opacity-30">
-            <div className="absolute w-[200%] h-[100px] top-[10%] left-[-50%] transform rotate-[-5deg] animate-[wave_12s_linear_infinite] bg-blue-500/20" />
-            <div className="absolute w-[200%] h-[100px] top-[20%] left-[-50%] transform rotate-[2deg] animate-[wave_14s_linear_infinite] bg-purple-500/20" />
-            <div className="absolute w-[200%] h-[100px] top-[30%] left-[-50%] transform rotate-[-3deg] animate-[wave_16s_linear_infinite] bg-indigo-500/20" />
-          </div>
+          {/* Animated glowing orbs */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/30 rounded-full filter blur-[128px] animate-pulse" />
+          <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-purple-500/30 rounded-full filter blur-[128px] animate-pulse delay-1000" />
         </div>
       </div>
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-12">
-          <h1 className="text-7xl font-light tracking-wider text-white mb-4 animate-fade-in">
+      {/* Main content */}
+      <div className="w-full max-w-md relative z-10 p-6">
+        {/* Logo/Title */}
+        <div className="text-center mb-16">
+          <h1 className="text-7xl font-light tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-white/90 to-white/60 animate-fade-in">
             iVALET
           </h1>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/10 transition-all duration-500 hover:bg-white/10">
+        {/* Login Form Card */}
+        <div className="bg-white/[0.08] backdrop-blur-2xl rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/[0.1]">
           <form onSubmit={handleLogin} className="space-y-6" dir="rtl">
-            <div className="space-y-4">
+            <div className="space-y-5">
               <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="البريد الإلكتروني"
-                className="bg-black/20 border-white/10 text-white placeholder:text-gray-400 text-right h-16 text-lg rounded-2xl transition-all duration-300 focus:bg-black/30 focus:border-white/20"
+                className="h-14 bg-white/[0.05] border-white/[0.1] text-white placeholder:text-gray-400 text-right text-lg rounded-2xl px-6
+                  focus:bg-white/[0.08] focus:border-white/[0.15] transition-all duration-300"
                 required
               />
 
@@ -84,7 +87,8 @@ const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="كلمة المرور"
-                className="bg-black/20 border-white/10 text-white placeholder:text-gray-400 text-right h-16 text-lg rounded-2xl transition-all duration-300 focus:bg-black/30 focus:border-white/20"
+                className="h-14 bg-white/[0.05] border-white/[0.1] text-white placeholder:text-gray-400 text-right text-lg rounded-2xl px-6
+                  focus:bg-white/[0.08] focus:border-white/[0.15] transition-all duration-300"
                 required
               />
             </div>
@@ -92,12 +96,12 @@ const Login: React.FC = () => {
             <Button
               type="submit"
               disabled={isLoading}
-              className={`w-full h-16 text-xl rounded-2xl transition-all duration-500 transform
+              className={`w-full h-14 text-lg rounded-2xl transition-all duration-500 transform
                 ${isLoading 
-                  ? 'bg-gray-600/50 cursor-not-allowed' 
-                  : 'bg-gradient-to-r from-blue-600/80 to-purple-600/80 hover:from-blue-500/90 hover:to-purple-500/90 hover:scale-[1.02]'
+                  ? 'bg-gray-600/30 cursor-not-allowed' 
+                  : 'bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 hover:scale-[1.02]'
                 }
-                backdrop-blur-xl border border-white/10 shadow-[0_0_15px_rgba(59,130,246,0.5)]
+                backdrop-blur-xl border-0 shadow-[0_0_20px_rgba(59,130,246,0.5)]
                 text-white font-medium`}
             >
               {isLoading ? '...جاري تسجيل الدخول' : 'تسجيل الدخول'}

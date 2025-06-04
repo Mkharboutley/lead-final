@@ -46,17 +46,21 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation Header */}
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black">
+      {/* Navigation Header with Glass Morphism */}
+      <header className="bg-black/20 backdrop-blur-xl border-b border-white/10 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <Link to="/dashboard" className="flex items-center space-x-2">
-                <div className="bg-blue-600 p-2 rounded-lg">
-                  <Car className="h-6 w-6 text-white" />
+              <Link to="/dashboard" className="flex items-center space-x-3">
+                <div className="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/20 shadow-xl">
+                  <img 
+                    src="/lovable-uploads/b2860a75-786b-473b-9558-918995cd240e.png" 
+                    alt="iVALET" 
+                    className="h-8 w-auto"
+                  />
                 </div>
-                <span className="text-xl font-bold text-gray-900">Valet System</span>
+                <span className="text-2xl font-bold text-white">iVALET System</span>
               </Link>
             </div>
 
@@ -67,10 +71,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-2 transition-colors ${
+                    className={`px-4 py-2 rounded-xl text-sm font-medium flex items-center space-x-2 transition-all duration-300 backdrop-blur-md ${
                       isActive
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        ? 'bg-white/20 text-white border border-white/30 shadow-lg'
+                        : 'text-gray-300 hover:text-white hover:bg-white/10 border border-transparent hover:border-white/20'
                     }`}
                   >
                     <item.icon className="h-4 w-4" />
@@ -81,8 +85,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </nav>
 
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" onClick={handleLogout}>
-                <LogOut className="h-4 w-4 mr-1" />
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleLogout}
+                className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 text-gray-200 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
             </div>
@@ -95,11 +104,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         {children}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="text-center text-sm text-gray-500">
-            © 2024 Valet System. All rights reserved.
+      {/* Footer with Glass Morphism */}
+      <footer className="bg-black/20 backdrop-blur-xl border-t border-white/10 mt-auto shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="text-center text-sm text-gray-300">
+            © 2024 iVALET System. All rights reserved.
           </div>
         </div>
       </footer>

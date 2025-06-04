@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Car, User, Calendar, Bell } from 'lucide-react';
+import { MessageCircle, Car, User, Calendar, Bell, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import VoiceChatModule from '../components/VoiceChatModule';
 import { useTicketStatus } from '../hooks/useTicketStatus';

@@ -1,15 +1,30 @@
 
 import React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { TicketStatus } from '../types/Ticket';
 
 interface StatusBadgeProps {
-  // Add props as needed
+  status: TicketStatus;
 }
 
-const StatusBadge: React.FC<StatusBadgeProps> = () => {
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
+  const getStatusVariant = (status: TicketStatus) => {
+    switch (status) {
+      case 'completed':
+        return 'default';
+      case 'cancelled':
+        return 'destructive';
+      case 'assigned':
+        return 'secondary';
+      default:
+        return 'outline';
+    }
+  };
+
   return (
-    <div className="status-badge">
-      {/* StatusBadge component content */}
-    </div>
+    <Badge variant={getStatusVariant(status)}>
+      {status.charAt(0).toUpperCase() + status.slice(1)}
+    </Badge>
   );
 };
 

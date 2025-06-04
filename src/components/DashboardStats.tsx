@@ -25,7 +25,8 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ tickets }) => {
       icon: Car,
       description: 'Currently in progress',
       color: 'text-blue-600',
-      bgColor: 'bg-blue-50'
+      bgColor: 'bg-blue-500/10',
+      borderColor: 'border-blue-500/20'
     },
     {
       title: 'Completed Today',
@@ -33,7 +34,8 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ tickets }) => {
       icon: TrendingUp,
       description: 'Tickets resolved today',
       color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      bgColor: 'bg-green-500/10',
+      borderColor: 'border-green-500/20'
     },
     {
       title: 'Avg Response Time',
@@ -41,7 +43,8 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ tickets }) => {
       icon: Clock,
       description: 'Average time to assign',
       color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50'
+      bgColor: 'bg-yellow-500/10',
+      borderColor: 'border-yellow-500/20'
     },
     {
       title: 'Satisfaction Rate',
@@ -49,17 +52,18 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ tickets }) => {
       icon: Users,
       description: 'Customer satisfaction',
       color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
+      bgColor: 'bg-purple-500/10',
+      borderColor: 'border-purple-500/20'
     }
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat) => (
-        <Card key={stat.title}>
+        <Card key={stat.title} className="bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
           <CardContent className="p-6">
             <div className="flex items-center">
-              <div className={`p-2 rounded-lg ${stat.bgColor}`}>
+              <div className={`p-3 rounded-xl ${stat.bgColor} ${stat.borderColor} border backdrop-blur-sm`}>
                 <stat.icon className={`h-6 w-6 ${stat.color}`} />
               </div>
               <div className="ml-4">

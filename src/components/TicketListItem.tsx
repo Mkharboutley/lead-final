@@ -47,33 +47,33 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
 
   return (
     <Card 
-      className={`cursor-pointer transition-all hover:shadow-md ${
-        isSelected ? 'ring-2 ring-blue-500' : ''
+      className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] bg-white/10 backdrop-blur-lg border border-white/20 ${
+        isSelected ? 'ring-2 ring-blue-500 shadow-2xl' : ''
       }`}
       onClick={() => onTicketSelect(ticket)}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="text-lg flex items-center gap-2 text-gray-900">
               Ticket #{ticket.ticket_number}
               <PriorityBadge priority={calculatePriority(ticket)} size="sm" />
             </CardTitle>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <StatusBadge status={ticket.status} />
               {ticket.assigned_worker && (
-                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                <span className="text-xs bg-blue-500/20 text-blue-800 px-2 py-1 rounded border border-blue-500/30 backdrop-blur-sm">
                   Assigned to: {ticket.assigned_worker}
                 </span>
               )}
               {ticket.eta_minutes && (
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                <span className="text-xs bg-green-500/20 text-green-800 px-2 py-1 rounded border border-green-500/30 backdrop-blur-sm">
                   ETA: {ticket.eta_minutes}min
                 </span>
               )}
             </div>
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-600 bg-white/20 backdrop-blur-sm px-2 py-1 rounded border border-white/30">
             <Clock className="h-4 w-4 inline mr-1" />
             {ticket.created_at.toDate().toLocaleString()}
           </div>
@@ -82,10 +82,10 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
       
       <CardContent className="pt-0">
         <div className="space-y-3 mb-4">
-          <div className="flex items-center gap-2 text-sm">
-            <Car className="h-4 w-4" />
-            <span className="font-medium">Vehicle:</span>
-            <span>{ticket.car_model} ({ticket.plate_number})</span>
+          <div className="flex items-center gap-2 text-sm bg-white/10 backdrop-blur-sm p-2 rounded border border-white/20">
+            <Car className="h-4 w-4 text-gray-600" />
+            <span className="font-medium text-gray-700">Vehicle:</span>
+            <span className="text-gray-900">{ticket.car_model} ({ticket.plate_number})</span>
           </div>
           
           <InlineAudioPreview

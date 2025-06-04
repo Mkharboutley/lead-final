@@ -27,12 +27,37 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
 
   return (
     <Tabs defaultValue="all" className="space-y-4">
-      <TabsList className="grid w-full grid-cols-5">
-        <TabsTrigger value="all">All ({tickets.length})</TabsTrigger>
-        <TabsTrigger value="running">Running ({filterTicketsByStatus('running').length})</TabsTrigger>
-        <TabsTrigger value="requested">Requested ({filterTicketsByStatus('requested').length})</TabsTrigger>
-        <TabsTrigger value="assigned">Assigned ({filterTicketsByStatus('assigned').length})</TabsTrigger>
-        <TabsTrigger value="completed">Completed ({filterTicketsByStatus('completed').length})</TabsTrigger>
+      <TabsList className="grid w-full grid-cols-5 bg-white/20 backdrop-blur-lg border border-white/20 p-1">
+        <TabsTrigger 
+          value="all" 
+          className="data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+        >
+          All ({tickets.length})
+        </TabsTrigger>
+        <TabsTrigger 
+          value="running"
+          className="data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+        >
+          Running ({filterTicketsByStatus('running').length})
+        </TabsTrigger>
+        <TabsTrigger 
+          value="requested"
+          className="data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+        >
+          Requested ({filterTicketsByStatus('requested').length})
+        </TabsTrigger>
+        <TabsTrigger 
+          value="assigned"
+          className="data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+        >
+          Assigned ({filterTicketsByStatus('assigned').length})
+        </TabsTrigger>
+        <TabsTrigger 
+          value="completed"
+          className="data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+        >
+          Completed ({filterTicketsByStatus('completed').length})
+        </TabsTrigger>
       </TabsList>
 
       <TabsContent value="all">

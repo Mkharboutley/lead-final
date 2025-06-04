@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading dashboard...</p>
@@ -51,9 +51,9 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Header with Glass Morphism */}
+      <header className="bg-white/10 backdrop-blur-lg border-b border-white/20 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
@@ -64,11 +64,15 @@ const Dashboard: React.FC = () => {
               <Button 
                 onClick={() => navigate('/test-voice')}
                 variant="outline"
+                className="bg-white/20 backdrop-blur-sm border-white/30 hover:bg-white/30 text-gray-700"
               >
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Test Voice
               </Button>
-              <Button onClick={() => navigate('/create-ticket')}>
+              <Button 
+                onClick={() => navigate('/create-ticket')}
+                className="bg-blue-600/80 backdrop-blur-sm hover:bg-blue-700/80 text-white border border-white/20"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 New Ticket
               </Button>
@@ -78,31 +82,42 @@ const Dashboard: React.FC = () => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Grid */}
-        <DashboardStats tickets={tickets} />
+        {/* Stats Grid with Glass Morphism */}
+        <div className="mb-8">
+          <DashboardStats tickets={tickets} />
+        </div>
 
-        {/* Main Content */}
+        {/* Main Content with Glass Morphism */}
         <div className="mt-8">
           <Tabs defaultValue="tickets" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="tickets" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-3 bg-white/20 backdrop-blur-lg border border-white/20 p-1">
+              <TabsTrigger 
+                value="tickets" 
+                className="flex items-center gap-2 data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+              >
                 <Car className="h-4 w-4" />
                 Active Tickets
               </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <TabsTrigger 
+                value="analytics" 
+                className="flex items-center gap-2 data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+              >
                 <BarChart3 className="h-4 w-4" />
                 Analytics
               </TabsTrigger>
-              <TabsTrigger value="notifications" className="flex items-center gap-2">
+              <TabsTrigger 
+                value="notifications" 
+                className="flex items-center gap-2 data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+              >
                 <Bell className="h-4 w-4" />
                 Notifications
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="tickets">
-              <Card>
+              <Card className="bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl">
                 <CardHeader>
-                  <CardTitle>Ticket Management</CardTitle>
+                  <CardTitle className="text-gray-900">Ticket Management</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <TicketTabs 
@@ -117,42 +132,42 @@ const Dashboard: React.FC = () => {
 
             <TabsContent value="analytics">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
+                <Card className="bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl">
                   <CardHeader>
-                    <CardTitle>Performance Metrics</CardTitle>
+                    <CardTitle className="text-gray-900">Performance Metrics</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex justify-between">
-                        <span>Average Response Time</span>
-                        <Badge variant="secondary">4.2 mins</Badge>
+                        <span className="text-gray-700">Average Response Time</span>
+                        <Badge variant="secondary" className="bg-white/20 backdrop-blur-sm">4.2 mins</Badge>
                       </div>
                       <div className="flex justify-between">
-                        <span>Customer Satisfaction</span>
-                        <Badge variant="secondary">94%</Badge>
+                        <span className="text-gray-700">Customer Satisfaction</span>
+                        <Badge variant="secondary" className="bg-white/20 backdrop-blur-sm">94%</Badge>
                       </div>
                       <div className="flex justify-between">
-                        <span>Completion Rate</span>
-                        <Badge variant="secondary">98%</Badge>
+                        <span className="text-gray-700">Completion Rate</span>
+                        <Badge variant="secondary" className="bg-white/20 backdrop-blur-sm">98%</Badge>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl">
                   <CardHeader>
-                    <CardTitle>Recent Activity</CardTitle>
+                    <CardTitle className="text-gray-900">Recent Activity</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       {tickets.slice(0, 5).map((ticket) => (
-                        <div key={ticket.id} className="flex items-center gap-3 p-2 border rounded">
+                        <div key={ticket.id} className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg">
                           <Clock className="h-4 w-4 text-gray-400" />
                           <div className="flex-1">
-                            <p className="text-sm font-medium">Ticket #{ticket.ticket_number}</p>
-                            <p className="text-xs text-gray-500">{ticket.car_model} - {ticket.plate_number}</p>
+                            <p className="text-sm font-medium text-gray-900">Ticket #{ticket.ticket_number}</p>
+                            <p className="text-xs text-gray-600">{ticket.car_model} - {ticket.plate_number}</p>
                           </div>
-                          <Badge variant="outline">{ticket.status}</Badge>
+                          <Badge variant="outline" className="bg-white/20 backdrop-blur-sm border-white/30">{ticket.status}</Badge>
                         </div>
                       ))}
                     </div>
@@ -162,18 +177,18 @@ const Dashboard: React.FC = () => {
             </TabsContent>
 
             <TabsContent value="notifications">
-              <Card>
+              <Card className="bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl">
                 <CardHeader>
-                  <CardTitle>System Notifications</CardTitle>
+                  <CardTitle className="text-gray-900">System Notifications</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="p-4 border-l-4 border-yellow-500 bg-yellow-50">
-                      <p className="font-medium">System Update Available</p>
+                    <div className="p-4 border-l-4 border-yellow-500 bg-yellow-50/50 backdrop-blur-sm rounded-r-lg">
+                      <p className="font-medium text-gray-900">System Update Available</p>
                       <p className="text-sm text-gray-600">New voice messaging features are ready to install.</p>
                     </div>
-                    <div className="p-4 border-l-4 border-green-500 bg-green-50">
-                      <p className="font-medium">All Systems Operational</p>
+                    <div className="p-4 border-l-4 border-green-500 bg-green-50/50 backdrop-blur-sm rounded-r-lg">
+                      <p className="font-medium text-gray-900">All Systems Operational</p>
                       <p className="text-sm text-gray-600">Voice messaging and real-time updates are working normally.</p>
                     </div>
                   </div>

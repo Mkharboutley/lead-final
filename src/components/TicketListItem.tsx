@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Clock, User, Car } from 'lucide-react';
@@ -47,7 +46,7 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
 
   return (
     <Card 
-      className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] bg-white/10 backdrop-blur-lg border border-white/20 ${
+      className={`ticket-card cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] bg-white/10 backdrop-blur-lg border border-white/20 ${
         isSelected ? 'ring-2 ring-blue-500 shadow-2xl' : ''
       }`}
       onClick={() => onTicketSelect(ticket)}

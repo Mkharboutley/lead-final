@@ -10,10 +10,19 @@ const ClientTicket: React.FC = () => {
   const navigate = useNavigate();
   const { ticket, isLoading, error } = useTicket(ticketId || '');
 
-  if (isLoading || !ticket) {
+  console.log('ClientTicket - ticketId:', ticketId);
+  console.log('ClientTicket - ticket:', ticket);
+  console.log('ClientTicket - isLoading:', isLoading);
+  console.log('ClientTicket - error:', error);
+
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
-        <div className="text-white">Loading ticket details...</div>
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <div>Loading ticket details...</div>
+          {ticketId && <div className="text-sm text-gray-400 mt-2">Ticket ID: {ticketId}</div>}
+        </div>
       </div>
     );
   }
@@ -21,7 +30,34 @@ const ClientTicket: React.FC = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
-        <div className="text-white">Error loading ticket</div>
+        <div className="text-white text-center">
+          <div className="text-red-400 mb-4">Error loading ticket</div>
+          <div className="text-sm text-gray-400">{error.message}</div>
+          {ticketId && <div className="text-sm text-gray-400 mt-2">Ticket ID: {ticketId}</div>}
+          <Button 
+            onClick={() => navigate('/create-ticket')}
+            className="mt-4 bg-blue-600 hover:bg-blue-700"
+          >
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!ticket) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="text-yellow-400 mb-4">Ticket not found</div>
+          {ticketId && <div className="text-sm text-gray-400 mt-2">Ticket ID: {ticketId}</div>}
+          <Button 
+            onClick={() => navigate('/create-ticket')}
+            className="mt-4 bg-blue-600 hover:bg-blue-700"
+          >
+            Create New Ticket
+          </Button>
+        </div>
       </div>
     );
   }

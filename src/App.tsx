@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import AdminTickets from "./pages/AdminTickets";
 import CreateTicket from "./pages/CreateTicket";
 import ClientTicket from "./pages/ClientTicket";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,11 @@ const App = () => (
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/tickets" element={
+              <ProtectedRoute>
+                <AdminTickets />
               </ProtectedRoute>
             } />
             <Route path="/create-ticket" element={

@@ -9,8 +9,8 @@ interface TicketListProps {
   messageCounts: Record<string, number>;
   onTicketSelect: (ticket: Ticket) => void;
   onStatusUpdate: (ticketId: string, status: TicketStatus) => void;
+  onAssignWorker: (ticket: Ticket) => void;
   selectedTicketId?: string;
-  getStatusActions: (ticket: Ticket) => { status: TicketStatus; label: string; variant?: "default" | "destructive" | "outline" | "secondary" }[];
 }
 
 const TicketList: React.FC<TicketListProps> = ({
@@ -18,9 +18,15 @@ const TicketList: React.FC<TicketListProps> = ({
   messageCounts,
   onTicketSelect,
   onStatusUpdate,
-  selectedTicketId,
-  getStatusActions
+  onAssignWorker,
+  selectedTicketId
 }) => {
+  // Simulate unread messages and latest audio URLs for demo
+  const getTicketData = (ticketId: string) => ({
+    hasUnreadMessages: Math.random() > 0.7,
+    latestAudioUrl: Math.random() > 0.5 ? 'mock-audio-url' : undefined
+  });
+
   return (
     <ScrollArea className="h-[600px] pr-4">
       <div className="space-y-4">
@@ -29,17 +35,22 @@ const TicketList: React.FC<TicketListProps> = ({
             No tickets found
           </div>
         ) : (
-          tickets.map((ticket) => (
-            <TicketListItem
-              key={ticket.id}
-              ticket={ticket}
-              messageCount={messageCounts[ticket.id] || 0}
-              onTicketSelect={onTicketSelect}
-              onStatusUpdate={onStatusUpdate}
-              isSelected={selectedTicketId === ticket.id}
-              getStatusActions={getStatusActions}
-            />
-          ))
+          tickets.map((ticket) => {
+            const ticketData = getTicketData(ticket.id);
+            return (
+              <TicketListItem
+                key={ticket.id}
+                ticket={ticket}
+                messageCount={messageCounts[ticket.id] || 0}
+                onTicketSelect={onTicketSelect}
+                onStatusUpdate={onStatusUpdate}
+                onAssignWorker={onAssignWorker}
+                isSelected={selectedTicketId === ticket.id}
+                hasUnreadMessages={ticketData.hasUnreadMessages}
+                latestAudioUrl={ticketData.latestAudioUrl}
+              />
+            );
+          })
         )}
       </div>
     </ScrollArea>

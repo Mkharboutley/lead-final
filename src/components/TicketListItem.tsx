@@ -1,20 +1,22 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Clock, User, Car } from 'lucide-react';
 import { Ticket, TicketStatus } from '../types/Ticket';
 import StatusBadge from './StatusBadge';
 import PriorityBadge, { Priority } from './PriorityBadge';
-import VoiceMessageBadge from './VoiceMessageBadge';
+import StatusDropdown from './StatusDropdown';
+import InlineAudioPreview from './InlineAudioPreview';
 
 interface TicketListItemProps {
   ticket: Ticket;
   messageCount: number;
   onTicketSelect: (ticket: Ticket) => void;
   onStatusUpdate: (ticketId: string, status: TicketStatus) => void;
+  onAssignWorker: (ticket: Ticket) => void;
   isSelected: boolean;
-  getStatusActions: (ticket: Ticket) => { status: TicketStatus; label: string; variant?: "default" | "destructive" | "outline" | "secondary" }[];
+  hasUnreadMessages?: boolean;
+  latestAudioUrl?: string;
 }
 
 const TicketListItem: React.FC<TicketListItemProps> = ({
@@ -22,8 +24,10 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
   messageCount,
   onTicketSelect,
   onStatusUpdate,
+  onAssignWorker,
   isSelected,
-  getStatusActions
+  hasUnreadMessages = false,
+  latestAudioUrl
 }) => {
   // Calculate priority based on ticket age and status
   const calculatePriority = (ticket: Ticket): Priority => {
@@ -37,8 +41,9 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
     return 'low';
   };
 
-  // Simulate unread messages (in real app, this would come from props)
-  const hasUnreadMessages = messageCount > 0 && Math.random() > 0.7;
+  const handleOpenVoiceChat = () => {
+    onTicketSelect(ticket);
+  };
 
   return (
     <Card 
@@ -56,11 +61,16 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
             </CardTitle>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <StatusBadge status={ticket.status} />
-              <VoiceMessageBadge 
-                messageCount={messageCount} 
-                hasUnread={hasUnreadMessages}
-                size="sm"
-              />
+              {ticket.assigned_worker && (
+                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  Assigned to: {ticket.assigned_worker}
+                </span>
+              )}
+              {ticket.eta_minutes && (
+                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                  ETA: {ticket.eta_minutes}min
+                </span>
+              )}
             </div>
           </div>
           <div className="text-sm text-gray-500">
@@ -71,7 +81,7 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
       </CardHeader>
       
       <CardContent className="pt-0">
-        <div className="space-y-2 mb-4">
+        <div className="space-y-3 mb-4">
           <div className="flex items-center gap-2 text-sm">
             <User className="h-4 w-4" />
             <span className="font-medium">Guest:</span>
@@ -82,22 +92,21 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
             <span className="font-medium">Vehicle:</span>
             <span>{ticket.car_model} ({ticket.plate_number})</span>
           </div>
+          
+          <InlineAudioPreview
+            messageCount={messageCount}
+            hasUnread={hasUnreadMessages}
+            onOpenVoiceChat={handleOpenVoiceChat}
+            latestAudioUrl={latestAudioUrl}
+          />
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {getStatusActions(ticket).map((action, index) => (
-            <Button
-              key={index}
-              size="sm"
-              variant={action.variant}
-              onClick={(e) => {
-                e.stopPropagation();
-                onStatusUpdate(ticket.id, action.status);
-              }}
-            >
-              {action.label}
-            </Button>
-          ))}
+        <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
+          <StatusDropdown
+            ticket={ticket}
+            onStatusUpdate={onStatusUpdate}
+            onAssignWorker={onAssignWorker}
+          />
         </div>
       </CardContent>
     </Card>

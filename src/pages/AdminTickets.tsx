@@ -4,15 +4,55 @@ import { Card, CardContent } from '@/components/ui/card';
 import { MessageCircle } from 'lucide-react';
 import VoiceChatModule from '../components/VoiceChatModule';
 import TicketTabs from '../components/TicketTabs';
+import AssignWorkerModal from '../components/AssignWorkerModal';
 import { Ticket } from '../types/Ticket';
 import { useTicketData } from '../hooks/useTicketData';
 import { useTicketActions } from '../hooks/useTicketActions';
+import { updateTicketStatus } from '../services/firestore';
+import { useToast } from '@/hooks/use-toast';
 
 const AdminTickets: React.FC = () => {
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [ticketToAssign, setTicketToAssign] = useState<Ticket | null>(null);
   
   const { tickets, messageCounts, isLoading, reloadTickets } = useTicketData();
-  const { handleStatusUpdate, getStatusActions } = useTicketActions(reloadTickets);
+  const { handleStatusUpdate } = useTicketActions(reloadTickets);
+  const { toast } = useToast();
+
+  const handleAssignWorker = (ticket: Ticket) => {
+    setTicketToAssign(ticket);
+    setIsAssignModalOpen(true);
+  };
+
+  const handleWorkerAssignment = async (
+    ticketId: string, 
+    workerName: string, 
+    etaMinutes: number, 
+    notes?: string
+  ) => {
+    try {
+      await updateTicketStatus(ticketId, 'assigned', {
+        assigned_worker: workerName,
+        eta_minutes: etaMinutes,
+        ...(notes && { notes })
+      });
+      
+      await reloadTickets();
+      
+      toast({
+        title: "Worker Assigned",
+        description: `${workerName} has been assigned to the ticket with ${etaMinutes} minute ETA`
+      });
+    } catch (error) {
+      console.error('Error assigning worker:', error);
+      toast({
+        title: "Error",
+        description: "Failed to assign worker to ticket",
+        variant: "destructive"
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -39,8 +79,8 @@ const AdminTickets: React.FC = () => {
             messageCounts={messageCounts}
             onTicketSelect={setSelectedTicket}
             onStatusUpdate={handleStatusUpdate}
+            onAssignWorker={handleAssignWorker}
             selectedTicketId={selectedTicket?.id}
-            getStatusActions={getStatusActions}
           />
         </div>
 
@@ -64,6 +104,17 @@ const AdminTickets: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Assign Worker Modal */}
+      <AssignWorkerModal
+        isOpen={isAssignModalOpen}
+        onClose={() => {
+          setIsAssignModalOpen(false);
+          setTicketToAssign(null);
+        }}
+        ticket={ticketToAssign}
+        onAssign={handleWorkerAssignment}
+      />
     </div>
   );
 };

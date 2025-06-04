@@ -9,8 +9,8 @@ interface TicketTabsProps {
   messageCounts: Record<string, number>;
   onTicketSelect: (ticket: Ticket) => void;
   onStatusUpdate: (ticketId: string, status: TicketStatus) => void;
+  onAssignWorker: (ticket: Ticket) => void;
   selectedTicketId?: string;
-  getStatusActions: (ticket: Ticket) => { status: TicketStatus; label: string; variant?: "default" | "destructive" | "outline" | "secondary" }[];
 }
 
 const TicketTabs: React.FC<TicketTabsProps> = ({
@@ -18,8 +18,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
   messageCounts,
   onTicketSelect,
   onStatusUpdate,
-  selectedTicketId,
-  getStatusActions
+  onAssignWorker,
+  selectedTicketId
 }) => {
   const filterTicketsByStatus = (status: TicketStatus) => {
     return tickets.filter(ticket => ticket.status === status);
@@ -41,8 +41,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
           messageCounts={messageCounts}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
+          onAssignWorker={onAssignWorker}
           selectedTicketId={selectedTicketId}
-          getStatusActions={getStatusActions}
         />
       </TabsContent>
 
@@ -52,8 +52,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
           messageCounts={messageCounts}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
+          onAssignWorker={onAssignWorker}
           selectedTicketId={selectedTicketId}
-          getStatusActions={getStatusActions}
         />
       </TabsContent>
 
@@ -63,8 +63,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
           messageCounts={messageCounts}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
+          onAssignWorker={onAssignWorker}
           selectedTicketId={selectedTicketId}
-          getStatusActions={getStatusActions}
         />
       </TabsContent>
 
@@ -74,8 +74,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
           messageCounts={messageCounts}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
+          onAssignWorker={onAssignWorker}
           selectedTicketId={selectedTicketId}
-          getStatusActions={getStatusActions}
         />
       </TabsContent>
 
@@ -85,8 +85,8 @@ const TicketTabs: React.FC<TicketTabsProps> = ({
           messageCounts={messageCounts}
           onTicketSelect={onTicketSelect}
           onStatusUpdate={onStatusUpdate}
+          onAssignWorker={onAssignWorker}
           selectedTicketId={selectedTicketId}
-          getStatusActions={getStatusActions}
         />
       </TabsContent>
     </Tabs>

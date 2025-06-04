@@ -1,6 +1,7 @@
 
 import { getDatabase, ref, set } from "firebase/database";
-import { FIREBASE_PATHS, VOICE_MESSAGE_FIELDS } from "../constants";
+import { FIREBASE_PATHS } from "../constants/firebase";
+import { VOICE_MESSAGE_FIELDS } from "../constants/messageFields";
 
 export const saveVoiceMessage = async (
   ticketId: string,

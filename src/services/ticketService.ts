@@ -1,6 +1,7 @@
 
 import { getDatabase, ref, set, update } from "firebase/database";
-import { FIREBASE_PATHS, TICKET_FIELDS } from "../constants";
+import { FIREBASE_PATHS } from "../constants/firebase";
+import { TICKET_FIELDS } from "../constants/fieldNames";
 
 export const createTicket = async (ticketId: string, data: any) => {
   const db = getDatabase();

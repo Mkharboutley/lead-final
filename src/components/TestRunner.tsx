@@ -64,9 +64,9 @@ const TestRunner: React.FC<TestRunnerProps> = ({
         addTestResult('Push Notification Test', 'error', 'Pusher Beams not configured');
       }
 
-      // Test 5: Role switching simulation
+      // Test 5: Role switching simulation - Fixed to use direct value instead of function updater
       addTestResult('Role Switch Test', 'pending', 'Testing role switching...');
-      setCurrentUserRole(prev => prev === 'client' ? 'admin' : 'client');
+      setCurrentUserRole(currentUserRole === 'client' ? 'admin' : 'client');
       addTestResult('Role Switch Test', 'success', `Switched to ${currentUserRole === 'client' ? 'admin' : 'client'} view`);
 
     } catch (error) {

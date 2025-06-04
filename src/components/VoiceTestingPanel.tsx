@@ -34,12 +34,17 @@ const VoiceTestingPanel: React.FC<VoiceTestingPanelProps> = ({
     isInitialized: pusherInitialized,
     permissionStatus,
     subscribeToTicket,
-    requestPermission
+    requestPermission: originalRequestPermission
   } = usePusherBeams({
     instanceId: pusherInstanceId,
     ticketId,
     enableAutoSubscribe: false
   });
+
+  // Wrapper function to match the expected signature - Fixed to return void
+  const requestPermission = async (): Promise<void> => {
+    await originalRequestPermission();
+  };
 
   const addTestResult = (test: string, status: 'pending' | 'success' | 'error', message: string) => {
     const result: TestResult = {

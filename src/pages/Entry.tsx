@@ -19,14 +19,6 @@ const Entry: React.FC = () => {
 
       {/* Main Content */}
       <div className="relative z-10 w-full max-w-md space-y-8">
-        {/* Phone mockup with QR code */}
-        <div className="glass-card p-8 text-center space-y-6">
-          <div className="relative mx-auto w-48 h-48 bg-white rounded-2xl p-6 shadow-xl">
-            <QrCode className="w-full h-full text-blue-600" />
-          </div>
-          <p className="text-white/60">امسح رمز QR أو اختر من الخيارات أدناه</p>
-        </div>
-
         {/* Action buttons */}
         <div className="space-y-4" dir="rtl">
           <Button

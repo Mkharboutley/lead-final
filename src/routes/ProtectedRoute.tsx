@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -40,34 +39,33 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Checking authentication...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-gray-900 to-black">
+        <div className="text-center bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto"></div>
+          <p className="mt-4 text-gray-300">Verifying authentication...</p>
         </div>
       </div>
     );
   }
   
-  if (!authenticated) {
-    // Redirect to login page with return url
+  // Always redirect to login if not authenticated, except for the login page itself
+  if (!authenticated && location.pathname !== '/login') {
+    // Save the attempted URL to redirect back after login
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Role-based redirects for root and entry paths
+  // Prevent authenticated users from accessing login page
+  if (authenticated && location.pathname === '/login') {
+    return <Navigate to={userRole === 'admin' ? '/dashboard' : '/entry'} replace />;
+  }
+
+  // Role-based route protection
   if (authenticated && userRole) {
-    const currentPath = location.pathname;
-    console.log('Current path:', currentPath, 'User role:', userRole);
+    const adminOnlyPaths = ['/dashboard', '/test-voice'];
+    const isAdminPath = adminOnlyPaths.some(path => location.pathname.startsWith(path));
     
-    // If user is on root path, entry page, or dashboard, redirect based on role
-    if (currentPath === '/' || currentPath === '/entry') {
-      if (userRole === 'admin') {
-        console.log('Redirecting admin to dashboard');
-        return <Navigate to="/dashboard" replace />;
-      } else {
-        console.log('Redirecting user to entry');
-        return <Navigate to="/entry" replace />;
-      }
+    if (isAdminPath && userRole !== 'admin') {
+      return <Navigate to="/entry" replace />;
     }
   }
 

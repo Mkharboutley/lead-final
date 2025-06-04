@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { getAuthInstance } from '../services/firebase';
 import { Button } from '@/components/ui/button';
-import { Car, Home, Plus, BarChart3, TestTube, LogOut } from 'lucide-react';
+import { Car, Home, Plus, TestTube, LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface MainLayoutProps {
@@ -19,7 +18,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Create Ticket', href: '/create-ticket', icon: Plus },
-    { name: 'Admin Tickets', href: '/admin/tickets', icon: BarChart3 },
     { name: 'Test Voice', href: '/test-voice', icon: TestTube },
   ];
 

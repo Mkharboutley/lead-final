@@ -1,8 +1,9 @@
 
-import { createRoot } from 'react-dom/client'
-import { initializeFirebase } from './services/firebase'
-import App from './App.tsx'
-import './index.css'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { initializeFirebase } from './services/firebase';
+import App from './App.tsx';
+import './index.css';
 
 // Initialize Firebase before rendering the app
 try {
@@ -12,4 +13,14 @@ try {
   console.error('Failed to initialize Firebase:', error);
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error('Root element not found');
+}
+
+const root = createRoot(container);
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);

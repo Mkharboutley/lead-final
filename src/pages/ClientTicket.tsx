@@ -40,7 +40,7 @@ const ClientTicket: React.FC = () => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle className="text-2xl font-bold">
-              Ticket #{ticket.ticketNumber}
+              Ticket #{ticket.ticket_number}
             </CardTitle>
             <StatusBadge status={ticket.status} />
           </div>
@@ -53,29 +53,35 @@ const ClientTicket: React.FC = () => {
                 <Clock className="h-5 w-5" />
                 <span>
                   Created:{' '}
-                  {new Date(ticket.createdAt).toLocaleDateString()}
+                  {new Date(ticket.created_at.toDate()).toLocaleDateString()}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                <span>Location: {ticket.location}</span>
-              </div>
+              {ticket.location && (
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  <span>Location: {ticket.location}</span>
+                </div>
+              )}
 
               <div className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                <span>Client: {ticket.clientName}</span>
+                <span>Client: {ticket.clientName || ticket.guest_name}</span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Phone className="h-5 w-5" />
-                <span>Phone: {ticket.clientPhoneNumber}</span>
-              </div>
+              {ticket.clientPhoneNumber && (
+                <div className="flex items-center gap-2">
+                  <Phone className="h-5 w-5" />
+                  <span>Phone: {ticket.clientPhoneNumber}</span>
+                </div>
+              )}
 
-              <div>
-                <h3 className="text-lg font-semibold">Description</h3>
-                <p>{ticket.description}</p>
-              </div>
+              {ticket.description && (
+                <div>
+                  <h3 className="text-lg font-semibold">Description</h3>
+                  <p>{ticket.description}</p>
+                </div>
+              )}
 
               <div>
                 <h3 className="text-lg font-semibold">
@@ -90,10 +96,10 @@ const ClientTicket: React.FC = () => {
 
               <div>
                 <h3 className="text-lg font-semibold">ETA</h3>
-                {ticket.eta_minutes && ticket.assignedAt ? (
+                {ticket.eta_minutes && ticket.assigned_at ? (
                   <CountdownTimer 
                     etaMinutes={ticket.eta_minutes} 
-                    assignedAt={new Date(ticket.assignedAt)}
+                    assignedAt={ticket.assigned_at.toDate()}
                     ticketId={ticket.id}
                   />
                 ) : (
@@ -104,10 +110,12 @@ const ClientTicket: React.FC = () => {
 
             {/* Right Column */}
             <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-semibold">Priority</h3>
-                <PriorityBadge priority={ticket.priority} />
-              </div>
+              {ticket.priority && (
+                <div>
+                  <h3 className="text-lg font-semibold">Priority</h3>
+                  <PriorityBadge priority={ticket.priority as any} />
+                </div>
+              )}
 
               <div>
                 <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -132,7 +140,7 @@ const ClientTicket: React.FC = () => {
             <CardContent>
               <VoiceChatModule
                 ticketId={ticketId}
-                ticketNumber={ticket.ticketNumber}
+                ticketNumber={ticket.ticket_number}
                 userRole="client"
               />
               <Button onClick={handleCloseVoiceChat} className="mt-4">

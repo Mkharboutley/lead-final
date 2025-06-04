@@ -21,6 +21,14 @@ export interface Ticket {
   ticket_url: string;
   pre_alert_sent: boolean;
   client_token: string;
+  
+  // Additional fields that may exist in Firestore
+  location?: string;
+  clientName?: string;
+  clientPhoneNumber?: string;
+  description?: string;
+  priority?: string;
+  voice_message_count?: number;
 }
 
 export type TicketStatus = 'running' | 'requested' | 'assigned' | 'completed' | 'cancelled';

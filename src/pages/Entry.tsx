@@ -1,59 +1,54 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { QrCode, CreditCard, X } from 'lucide-react';
+import { CreditCard, QrCode } from 'lucide-react';
 
 const Entry: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-800 to-slate-900 flex flex-col items-center justify-center p-4">
-      {/* Phone mockup container */}
-      <div className="relative w-full max-w-sm">
-        {/* QR Code display area */}
-        <div className="mb-8 flex justify-center">
-          <div className="relative">
-            {/* Phone frame */}
-            <div className="bg-gradient-to-br from-gray-400 to-gray-600 p-4 rounded-3xl shadow-2xl">
-              <div className="bg-black rounded-2xl p-6 min-h-[300px] flex items-center justify-center">
-                {/* QR Code placeholder */}
-                <div className="bg-white p-6 rounded-lg">
-                  <QrCode className="h-24 w-24 text-blue-600" />
-                </div>
-              </div>
-            </div>
-            {/* Large QR code on the side */}
-            <div className="absolute -right-16 top-1/2 transform -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg">
-              <QrCode className="h-20 w-20 text-gray-800" />
-            </div>
+    <div className="min-h-[calc(100vh-4rem)] relative flex flex-col items-center justify-center p-8">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 animated-gradient" />
+      
+      {/* Glowing orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/30 rounded-full filter blur-[128px] animate-pulse" />
+        <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-purple-500/30 rounded-full filter blur-[128px] animate-pulse delay-1000" />
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-md space-y-8">
+        {/* Phone mockup with QR code */}
+        <div className="glass-card p-8 text-center space-y-6">
+          <div className="relative mx-auto w-48 h-48 bg-white rounded-2xl p-6 shadow-xl">
+            <QrCode className="w-full h-full text-blue-600" />
           </div>
+          <p className="text-white/60">امسح رمز QR أو اختر من الخيارات أدناه</p>
         </div>
 
         {/* Action buttons */}
-        <div className="space-y-4">
-          <Button 
+        <div className="space-y-4" dir="rtl">
+          <Button
             onClick={() => navigate('/create-ticket')}
-            className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-4 text-lg rounded-xl flex items-center justify-center gap-3"
+            variant="gradient"
+            size="lg"
+            className="w-full"
           >
-            <CreditCard className="h-6 w-6" />
-            بطاقة جديدة (New Card)
+            <CreditCard className="h-5 w-5 ml-2" />
+            بطاقة جديدة
           </Button>
 
-          <Button 
+          <Button
             onClick={() => navigate('/dashboard')}
-            className="w-full bg-gray-600 hover:bg-gray-700 text-white py-4 text-lg rounded-xl flex items-center justify-center gap-3"
+            variant="outline"
+            size="lg"
+            className="w-full"
           >
-            <QrCode className="h-6 w-6" />
-            إغلاق بطاقة (Close Card)
+            <QrCode className="h-5 w-5 ml-2" />
+            إغلاق بطاقة
           </Button>
         </div>
-      </div>
-
-      {/* Footer text */}
-      <div className="mt-8 text-center text-gray-400 text-sm">
-        <p>Scan QR code or choose an action</p>
       </div>
     </div>
   );

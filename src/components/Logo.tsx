@@ -10,7 +10,7 @@ const Logo: React.FC<LogoProps> = ({ className = "" }) => {
       <img 
         src="/lovable-uploads/b2860a75-786b-473b-9558-918995cd240e copy.png"
         alt="iVALET"
-        className="h-12 w-auto"
+        className="w-full h-auto max-w-[280px]" // Increased width to match button
       />
     </div>
   );

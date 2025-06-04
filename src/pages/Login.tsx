@@ -63,8 +63,8 @@ const Login: React.FC = () => {
       {/* Main content */}
       <div className="w-full max-w-md relative z-10 p-6">
         {/* Logo */}
-        <div className="text-center mb-16">
-          <Logo className="w-48 mx-auto animate-fade-in" />
+        <div className="text-center mb-16 px-8">
+          <Logo className="w-full animate-fade-in" />
         </div>
 
         {/* Login Form Card */}

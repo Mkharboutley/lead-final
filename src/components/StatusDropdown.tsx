@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Play, UserPlus, CheckCircle, XCircle, Truck } from 'lucide-react';
+import { ChevronDown, Play, UserPlus, CheckCircle, XCircle, Truck, ArrowLeft } from 'lucide-react';
 import { Ticket, TicketStatus } from '../types/Ticket';
 
 interface StatusDropdownProps {
@@ -20,18 +20,11 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
   onStatusUpdate,
   onAssignWorker
 }) => {
-  const getStatusIcon = (status: TicketStatus) => {
-    switch (status) {
-      case 'running':
-        return <Play className="h-4 w-4" />;
-      case 'requested':
-        return <UserPlus className="h-4 w-4" />;
-      case 'assigned':
-        return <Truck className="h-4 w-4" />;
-      case 'completed':
-        return <CheckCircle className="h-4 w-4" />;
-      case 'cancelled':
-        return <XCircle className="h-4 w-4" />;
+  const handleAction = (action: { status: TicketStatus, isAssign?: boolean }) => {
+    if (action.isAssign) {
+      onAssignWorker(ticket);
+    } else {
+      onStatusUpdate(ticket.id, action.status);
     }
   };
 
@@ -47,9 +40,9 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
       case 'running':
         actions.push({
           status: 'requested' as TicketStatus,
-          label: 'Mark as Requested',
+          label: 'طلب السيارة',
           icon: <UserPlus className="h-4 w-4" />,
-          variant: 'default' as const
+          color: 'text-blue-400 hover:text-blue-300 hover:bg-blue-500/20'
         });
         break;
         
@@ -57,16 +50,16 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
         actions.push(
           {
             status: 'assigned' as TicketStatus,
-            label: 'Assign Worker',
+            label: 'تعيين سائق',
             icon: <Truck className="h-4 w-4" />,
             isAssign: true,
-            variant: 'default' as const
+            color: 'text-green-400 hover:text-green-300 hover:bg-green-500/20'
           },
           {
             status: 'running' as TicketStatus,
-            label: 'Back to Running',
-            icon: <Play className="h-4 w-4" />,
-            variant: 'secondary' as const
+            label: 'إعادة للانتظار',
+            icon: <ArrowLeft className="h-4 w-4" />,
+            color: 'text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20'
           }
         );
         break;
@@ -75,15 +68,15 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
         actions.push(
           {
             status: 'completed' as TicketStatus,
-            label: 'Mark Complete',
+            label: 'إكمال الطلب',
             icon: <CheckCircle className="h-4 w-4" />,
-            variant: 'default' as const
+            color: 'text-green-400 hover:text-green-300 hover:bg-green-500/20'
           },
           {
             status: 'requested' as TicketStatus,
-            label: 'Back to Requested',
-            icon: <UserPlus className="h-4 w-4" />,
-            variant: 'secondary' as const
+            label: 'إعادة للطلب',
+            icon: <ArrowLeft className="h-4 w-4" />,
+            color: 'text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20'
           }
         );
         break;
@@ -93,9 +86,9 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
     if (['running', 'requested', 'assigned'].includes(ticket.status)) {
       actions.push({
         status: 'cancelled' as TicketStatus,
-        label: 'Cancel Ticket',
+        label: 'إلغاء الطلب',
         icon: <XCircle className="h-4 w-4" />,
-        variant: 'destructive' as const
+        color: 'text-red-400 hover:text-red-300 hover:bg-red-500/20'
       });
     }
     
@@ -114,31 +107,27 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
         <Button 
           variant="outline" 
           size="sm"
-          className="glass-button h-8 px-2 py-1"
+          className="glass-button h-8 px-2 py-1 text-xs"
         >
-          Actions
-          <ChevronDown className="h-3 w-3 ml-1" />
+          <span className="sr-only">Actions</span>
+          <ChevronDown className="h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
+      
       <DropdownMenuContent 
         align="end"
-        className="bg-black/40 backdrop-blur-xl border border-white/10"
+        className="glass-morphism-strong min-w-[140px] p-2"
       >
         {actions.map((action, index) => (
           <DropdownMenuItem
             key={index}
-            onClick={() => {
-              if (action.isAssign) {
-                onAssignWorker(ticket);
-              } else {
-                onStatusUpdate(ticket.id, action.status);
-              }
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAction(action);
             }}
             className={`
-              flex items-center gap-2 text-sm cursor-pointer
-              ${action.variant === 'destructive' ? 'text-red-400 hover:text-red-300 hover:bg-red-950/50' : 
-                action.variant === 'secondary' ? 'text-gray-300 hover:text-white hover:bg-white/5' :
-                'text-white hover:bg-white/10'}
+              flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer
+              transition-colors duration-200 ${action.color}
             `}
           >
             {action.icon}

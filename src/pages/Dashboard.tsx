@@ -13,14 +13,28 @@ import {
   Plus,
   BarChart3,
   MessageSquare,
-  Bell
+  Bell,
+  Settings,
+  UserCog
 } from 'lucide-react';
 import { useTickets } from '../hooks/useTickets';
+import { useAdminConfig } from '../hooks/useAdminConfig';
 import TicketTabs from '../components/TicketTabs';
 import DashboardStats from '../components/DashboardStats';
+import DriverManagement from '../components/DriverManagement';
+import ETAConfiguration from '../components/ETAConfiguration';
 
 const Dashboard: React.FC = () => {
   const { tickets, isLoading } = useTickets();
+  const { 
+    drivers, 
+    etaConfig, 
+    isLoading: isConfigLoading,
+    handleAddDriver,
+    handleToggleDriverAvailability,
+    handleRemoveDriver,
+    handleUpdateETAConfig
+  } = useAdminConfig();
   const navigate = useNavigate();
   const [selectedTicket, setSelectedTicket] = useState(null);
 
@@ -39,7 +53,7 @@ const Dashboard: React.FC = () => {
     // Implement worker assignment logic
   };
 
-  if (isLoading) {
+  if (isLoading || isConfigLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
@@ -57,8 +71,8 @@ const Dashboard: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Valet Dashboard</h1>
-              <p className="text-gray-600">Manage tickets and monitor operations</p>
+              <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+              <p className="text-gray-600">Manage tickets, drivers, and system configuration</p>
             </div>
             <div className="flex space-x-3">
               <Button 
@@ -90,13 +104,27 @@ const Dashboard: React.FC = () => {
         {/* Main Content with Glass Morphism */}
         <div className="mt-8">
           <Tabs defaultValue="tickets" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 bg-white/20 backdrop-blur-lg border border-white/20 p-1">
+            <TabsList className="grid w-full grid-cols-5 bg-white/20 backdrop-blur-lg border border-white/20 p-1">
               <TabsTrigger 
                 value="tickets" 
                 className="flex items-center gap-2 data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
               >
                 <Car className="h-4 w-4" />
-                Active Tickets
+                Tickets
+              </TabsTrigger>
+              <TabsTrigger 
+                value="drivers" 
+                className="flex items-center gap-2 data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+              >
+                <UserCog className="h-4 w-4" />
+                Drivers
+              </TabsTrigger>
+              <TabsTrigger 
+                value="config" 
+                className="flex items-center gap-2 data-[state=active]:bg-white/30 data-[state=active]:backdrop-blur-sm"
+              >
+                <Settings className="h-4 w-4" />
+                Configuration
               </TabsTrigger>
               <TabsTrigger 
                 value="analytics" 
@@ -128,6 +156,22 @@ const Dashboard: React.FC = () => {
                   />
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="drivers">
+              <DriverManagement
+                drivers={drivers}
+                onAddDriver={handleAddDriver}
+                onToggleAvailability={handleToggleDriverAvailability}
+                onRemoveDriver={handleRemoveDriver}
+              />
+            </TabsContent>
+
+            <TabsContent value="config">
+              <ETAConfiguration
+                etaConfig={etaConfig}
+                onUpdateConfig={handleUpdateETAConfig}
+              />
             </TabsContent>
 
             <TabsContent value="analytics">

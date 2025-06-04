@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, CheckCircle } from 'lucide-react';
 import { updateTicketStatus } from '../services/firestore';
+import { subscribeToETAConfig } from '../services/adminConfigService';
+import { ETAConfig } from '../types/AdminConfig';
 import { useToast } from '@/hooks/use-toast';
 
 interface CountdownTimerProps {
-  etaMinutes: number;
+  etaMinutes?: number; // Made optional, will use config if not provided
   assignedAt: Date;
   ticketId?: string;
   onComplete?: () => void;
@@ -20,13 +22,26 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [isComplete, setIsComplete] = useState(false);
   const [hasAutoUpgraded, setHasAutoUpgraded] = useState(false);
+  const [etaConfig, setETAConfig] = useState<ETAConfig | null>(null);
   const { toast } = useToast();
+
+  // Subscribe to ETA configuration changes
+  useEffect(() => {
+    const unsubscribe = subscribeToETAConfig((config) => {
+      setETAConfig(config);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Get effective ETA minutes from props or config
+  const effectiveETAMinutes = etaMinutes || etaConfig?.defaultDeliveryTimeMinutes || 10;
 
   useEffect(() => {
     const calculateTimeRemaining = () => {
       const now = Date.now();
       const assigned = assignedAt.getTime();
-      const etaTime = assigned + (etaMinutes * 60 * 1000);
+      const etaTime = assigned + (effectiveETAMinutes * 60 * 1000);
       const remaining = Math.max(0, etaTime - now);
       
       return Math.floor(remaining / 1000); // Convert to seconds
@@ -71,7 +86,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
     const interval = setInterval(updateTimer, 1000);
 
     return () => clearInterval(interval);
-  }, [etaMinutes, assignedAt, isComplete, onComplete, ticketId, hasAutoUpgraded, toast]);
+  }, [effectiveETAMinutes, assignedAt, isComplete, onComplete, ticketId, hasAutoUpgraded, toast]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -80,7 +95,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   };
 
   const getProgressPercentage = () => {
-    const totalSeconds = etaMinutes * 60;
+    const totalSeconds = effectiveETAMinutes * 60;
     const elapsed = totalSeconds - timeRemaining;
     return Math.min(100, Math.max(0, (elapsed / totalSeconds) * 100));
   };
@@ -133,6 +148,11 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
         
         <div className="text-xs text-blue-600 text-center break-words bg-white/20 backdrop-blur-sm rounded-lg p-2 border border-white/30">
           Valet assigned at {assignedAt.toLocaleTimeString()}
+          {etaConfig && (
+            <div className="mt-1">
+              ETA: {effectiveETAMinutes} min (configurable)
+            </div>
+          )}
         </div>
       </div>
     </div>

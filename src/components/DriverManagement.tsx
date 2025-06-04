@@ -179,7 +179,6 @@ const DriverManagement: React.FC<DriverManagementProps> = ({
                       <Switch
                         checked={driver.isActive}
                         onCheckedChange={(checked) => onToggleAvailability(driver.id, checked)}
-                        size="sm"
                       />
                       <Button
                         variant="ghost"

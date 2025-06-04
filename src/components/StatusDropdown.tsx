@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   DropdownMenu,
@@ -39,41 +38,65 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
   const getAvailableActions = () => {
     const actions = [];
     
-    // Prevent any status changes if already completed
-    if (ticket.status === 'completed') {
+    // Prevent any status changes if already completed or cancelled
+    if (ticket.status === 'completed' || ticket.status === 'cancelled') {
       return [];
     }
     
     switch (ticket.status) {
       case 'running':
-        // Only admin can change from running to requested
-        actions.push(
-          { status: 'requested' as TicketStatus, label: 'Mark as Requested', icon: <UserPlus className="h-4 w-4" /> }
-        );
+        actions.push({
+          status: 'requested' as TicketStatus,
+          label: 'Mark as Requested',
+          icon: <UserPlus className="h-4 w-4" />,
+          variant: 'default' as const
+        });
         break;
         
       case 'requested':
-        // Can assign worker or mark as running (manual override)
         actions.push(
-          { status: 'assigned' as TicketStatus, label: 'Assign Worker', icon: <Truck className="h-4 w-4" />, isAssign: true },
-          { status: 'running' as TicketStatus, label: 'Override to Running', icon: <Play className="h-4 w-4" /> }
+          {
+            status: 'assigned' as TicketStatus,
+            label: 'Assign Worker',
+            icon: <Truck className="h-4 w-4" />,
+            isAssign: true,
+            variant: 'default' as const
+          },
+          {
+            status: 'running' as TicketStatus,
+            label: 'Back to Running',
+            icon: <Play className="h-4 w-4" />,
+            variant: 'secondary' as const
+          }
         );
         break;
         
       case 'assigned':
-        // Can complete or override back to requested
         actions.push(
-          { status: 'completed' as TicketStatus, label: 'Mark Complete', icon: <CheckCircle className="h-4 w-4" /> },
-          { status: 'requested' as TicketStatus, label: 'Back to Requested', icon: <UserPlus className="h-4 w-4" /> }
+          {
+            status: 'completed' as TicketStatus,
+            label: 'Mark Complete',
+            icon: <CheckCircle className="h-4 w-4" />,
+            variant: 'default' as const
+          },
+          {
+            status: 'requested' as TicketStatus,
+            label: 'Back to Requested',
+            icon: <UserPlus className="h-4 w-4" />,
+            variant: 'secondary' as const
+          }
         );
         break;
     }
     
-    // Add cancel option for all active statuses (except completed)
+    // Add cancel option for all active statuses
     if (['running', 'requested', 'assigned'].includes(ticket.status)) {
-      actions.push(
-        { status: 'cancelled' as TicketStatus, label: 'Cancel Ticket', icon: <XCircle className="h-4 w-4" /> }
-      );
+      actions.push({
+        status: 'cancelled' as TicketStatus,
+        label: 'Cancel Ticket',
+        icon: <XCircle className="h-4 w-4" />,
+        variant: 'destructive' as const
+      });
     }
     
     return actions;
@@ -82,22 +105,25 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
   const actions = getAvailableActions();
 
   if (actions.length === 0) {
-    return (
-      <Button variant="outline" size="sm" disabled className="opacity-50">
-        No Actions Available
-      </Button>
-    );
+    return null;
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center gap-1">
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="glass-button h-8 px-2 py-1"
+        >
           Actions
-          <ChevronDown className="h-3 w-3" />
+          <ChevronDown className="h-3 w-3 ml-1" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent 
+        align="end"
+        className="bg-black/40 backdrop-blur-xl border border-white/10"
+      >
         {actions.map((action, index) => (
           <DropdownMenuItem
             key={index}
@@ -108,7 +134,12 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
                 onStatusUpdate(ticket.id, action.status);
               }
             }}
-            className="flex items-center gap-2"
+            className={`
+              flex items-center gap-2 text-sm cursor-pointer
+              ${action.variant === 'destructive' ? 'text-red-400 hover:text-red-300 hover:bg-red-950/50' : 
+                action.variant === 'secondary' ? 'text-gray-300 hover:text-white hover:bg-white/5' :
+                'text-white hover:bg-white/10'}
+            `}
           >
             {action.icon}
             {action.label}

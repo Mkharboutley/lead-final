@@ -51,37 +51,38 @@ const DriverManagement: React.FC<DriverManagementProps> = ({
   const inactiveDrivers = drivers.filter(d => !d.isActive);
 
   return (
-    <Card className="bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl">
+    <Card className="bg-black/20 backdrop-blur-xl border border-white/10 shadow-2xl">
       <CardHeader>
         <div className="flex justify-between items-center">
-          <CardTitle className="text-gray-900 flex items-center gap-2">
+          <CardTitle className="text-white flex items-center gap-2">
             <User className="h-5 w-5" />
             Driver Management
           </CardTitle>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-blue-600/80 backdrop-blur-sm hover:bg-blue-700/80 text-white">
+              <Button className="bg-blue-600/70 backdrop-blur-md hover:bg-blue-600/90 text-white border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Driver
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-white/95 backdrop-blur-lg">
+            <DialogContent className="bg-black/90 backdrop-blur-xl border border-white/20 text-white">
               <DialogHeader>
-                <DialogTitle>Add New Driver</DialogTitle>
+                <DialogTitle className="text-white">Add New Driver</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name *</Label>
+                  <Label htmlFor="name" className="text-gray-300">Name *</Label>
                   <Input
                     id="name"
                     value={newDriver.name}
                     onChange={(e) => setNewDriver({ ...newDriver, name: e.target.value })}
                     placeholder="Driver's full name"
                     required
+                    className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
+                  <Label htmlFor="email" className="text-gray-300">Email *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -89,15 +90,17 @@ const DriverManagement: React.FC<DriverManagementProps> = ({
                     onChange={(e) => setNewDriver({ ...newDriver, email: e.target.value })}
                     placeholder="driver@email.com"
                     required
+                    className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone" className="text-gray-300">Phone</Label>
                   <Input
                     id="phone"
                     value={newDriver.phone}
                     onChange={(e) => setNewDriver({ ...newDriver, phone: e.target.value })}
                     placeholder="(optional)"
+                    className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div className="flex items-center space-x-2">
@@ -106,14 +109,15 @@ const DriverManagement: React.FC<DriverManagementProps> = ({
                     checked={newDriver.isActive}
                     onCheckedChange={(checked) => setNewDriver({ ...newDriver, isActive: checked })}
                   />
-                  <Label htmlFor="active">Active by default</Label>
+                  <Label htmlFor="active" className="text-gray-300">Active by default</Label>
                 </div>
                 <div className="flex gap-2 pt-4">
-                  <Button type="submit" className="flex-1">Add Driver</Button>
+                  <Button type="submit" className="flex-1 bg-blue-600/70 hover:bg-blue-600/90">Add Driver</Button>
                   <Button 
                     type="button" 
                     variant="outline" 
                     onClick={() => setIsAddDialogOpen(false)}
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                   >
                     Cancel
                   </Button>
@@ -122,79 +126,81 @@ const DriverManagement: React.FC<DriverManagementProps> = ({
             </DialogContent>
           </Dialog>
         </div>
-        <div className="flex gap-4 text-sm text-gray-600">
+        <div className="flex gap-4 text-sm text-gray-300">
           <span>Active: {activeDrivers.length}</span>
           <span>Inactive: {inactiveDrivers.length}</span>
           <span>Total: {drivers.length}</span>
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {drivers.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center text-gray-500 py-8">
-                  No drivers found. Add your first driver to get started.
-                </TableCell>
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-white/10 hover:bg-white/5">
+                <TableHead className="text-gray-300">Name</TableHead>
+                <TableHead className="text-gray-300">Email</TableHead>
+                <TableHead className="text-gray-300">Phone</TableHead>
+                <TableHead className="text-gray-300">Status</TableHead>
+                <TableHead className="text-gray-300">Actions</TableHead>
               </TableRow>
-            ) : (
-              drivers.map((driver) => (
-                <TableRow key={driver.id}>
-                  <TableCell className="font-medium">{driver.name}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-gray-400" />
-                      {driver.email}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {driver.phone ? (
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-gray-400" />
-                        {driver.phone}
-                      </div>
-                    ) : (
-                      <span className="text-gray-400">-</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant={driver.isActive ? "default" : "secondary"}
-                      className={driver.isActive ? "bg-green-500/80 text-white" : "bg-gray-500/80 text-white"}
-                    >
-                      {driver.isActive ? "Active" : "Inactive"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={driver.isActive}
-                        onCheckedChange={(checked) => onToggleAvailability(driver.id, checked)}
-                      />
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onRemoveDriver(driver.id)}
-                        className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+            </TableHeader>
+            <TableBody>
+              {drivers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center text-gray-400 py-8">
+                    No drivers found. Add your first driver to get started.
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                drivers.map((driver) => (
+                  <TableRow key={driver.id} className="border-white/10 hover:bg-white/5">
+                    <TableCell className="font-medium text-white">{driver.name}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2 text-gray-300">
+                        <Mail className="h-4 w-4 text-gray-400" />
+                        {driver.email}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {driver.phone ? (
+                        <div className="flex items-center gap-2 text-gray-300">
+                          <Phone className="h-4 w-4 text-gray-400" />
+                          {driver.phone}
+                        </div>
+                      ) : (
+                        <span className="text-gray-500">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant={driver.isActive ? "default" : "secondary"}
+                        className={driver.isActive ? "bg-green-500/80 text-white backdrop-blur-md" : "bg-gray-500/80 text-white backdrop-blur-md"}
+                      >
+                        {driver.isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={driver.isActive}
+                          onCheckedChange={(checked) => onToggleAvailability(driver.id, checked)}
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onRemoveDriver(driver.id)}
+                          className="text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   );

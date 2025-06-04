@@ -1,155 +1,108 @@
 
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Clock, MapPin, User, Phone } from 'lucide-react';
-import StatusBadge from '../components/StatusBadge';
-import PriorityBadge from '../components/PriorityBadge';
-import VoiceChatModule from '../components/voice/VoiceChatModule';
 import { useTicket } from '../hooks/useTicket';
-import CountdownTimer from '../components/CountdownTimer';
 
 const ClientTicket: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
+  const navigate = useNavigate();
   const { ticket, isLoading, error } = useTicket(ticketId || '');
-  const [isVoiceChatOpen, setIsVoiceChatOpen] = useState(false);
-
-  useEffect(() => {
-    if (error) {
-      console.error("Error fetching ticket:", error);
-    }
-  }, [error]);
 
   if (isLoading || !ticket) {
-    return <div>Loading ticket details...</div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+        <div className="text-white">Loading ticket details...</div>
+      </div>
+    );
   }
 
-  const handleOpenVoiceChat = () => {
-    setIsVoiceChatOpen(true);
-  };
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+        <div className="text-white">Error loading ticket</div>
+      </div>
+    );
+  }
 
-  const handleCloseVoiceChat = () => {
-    setIsVoiceChatOpen(false);
+  // Generate QR code URL (using a QR code service)
+  const qrCodeData = `Ticket: ${ticket.ticket_number}\nPlate: ${ticket.plate_number}\nVehicle: ${ticket.car_model}\nTime: ${ticket.created_at.toDate().toLocaleString()}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrCodeData)}`;
+
+  const formatArabicDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    };
+    return date.toLocaleDateString('en-US', options);
   };
 
   return (
-    <div className="container mx-auto mt-8">
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-2xl font-bold">
-              Ticket #{ticket.ticket_number}
-            </CardTitle>
-            <StatusBadge status={ticket.status} />
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      {/* Header with back button */}
+      <div className="flex items-center p-4">
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={() => navigate('/entry')}
+          className="text-white hover:bg-gray-800"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+      </div>
+
+      {/* Main content */}
+      <div className="flex flex-col items-center justify-center px-6 py-12">
+        {/* QR Code Card */}
+        <div className="bg-gray-700/50 backdrop-blur-sm rounded-3xl p-8 w-full max-w-sm">
+          {/* QR Code */}
+          <div className="bg-white rounded-2xl p-6 mb-6">
+            <img 
+              src={qrCodeUrl}
+              alt="Ticket QR Code"
+              className="w-full h-auto"
+            />
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left Column */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5" />
-                <span>
-                  Created:{' '}
-                  {new Date(ticket.created_at.toDate()).toLocaleDateString()}
-                </span>
-              </div>
 
-              {ticket.location && (
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5" />
-                  <span>Location: {ticket.location}</span>
-                </div>
-              )}
-
-              <div className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                <span>Client: {ticket.clientName || ticket.guest_name}</span>
-              </div>
-
-              {ticket.clientPhoneNumber && (
-                <div className="flex items-center gap-2">
-                  <Phone className="h-5 w-5" />
-                  <span>Phone: {ticket.clientPhoneNumber}</span>
-                </div>
-              )}
-
-              {ticket.description && (
-                <div>
-                  <h3 className="text-lg font-semibold">Description</h3>
-                  <p>{ticket.description}</p>
-                </div>
-              )}
-
-              <div>
-                <h3 className="text-lg font-semibold">
-                  Assigned Worker
-                </h3>
-                {ticket.assigned_worker ? (
-                  <p>{ticket.assigned_worker}</p>
-                ) : (
-                  <p>Not assigned</p>
-                )}
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold">ETA</h3>
-                {ticket.eta_minutes && ticket.assigned_at ? (
-                  <CountdownTimer 
-                    etaMinutes={ticket.eta_minutes} 
-                    assignedAt={ticket.assigned_at.toDate()}
-                    ticketId={ticket.id}
-                  />
-                ) : (
-                  <p>ETA not set</p>
-                )}
-              </div>
+          {/* Ticket Information in Arabic style */}
+          <div className="text-center space-y-3 text-white">
+            <div className="text-lg">
+              <span className="text-gray-300">رقم التذكرة: </span>
+              <span className="font-bold">{String(ticket.ticket_number).padStart(4, '0')}</span>
             </div>
-
-            {/* Right Column */}
-            <div className="space-y-4">
-              {ticket.priority && (
-                <div>
-                  <h3 className="text-lg font-semibold">Priority</h3>
-                  <PriorityBadge priority={ticket.priority as any} />
-                </div>
-              )}
-
-              <div>
-                <h3 className="text-lg font-semibold flex items-center gap-2">
-                  Voice Messages
-                  <Badge variant="secondary">{ticket.voice_message_count || 0}</Badge>
-                </h3>
-                <Button onClick={handleOpenVoiceChat}>
-                  Open Voice Chat
-                </Button>
-              </div>
+            
+            <div className="text-lg">
+              <span className="text-gray-300">رقم اللوحة: </span>
+              <span className="font-bold">{ticket.plate_number}</span>
+            </div>
+            
+            <div className="text-lg">
+              <span className="text-gray-300">موديل السيارة: </span>
+              <span className="font-bold">{ticket.car_model}</span>
+            </div>
+            
+            <div className="text-lg">
+              <span className="text-gray-300">وقت الدخول: </span>
+              <span className="font-bold">{formatArabicDate(ticket.created_at.toDate())}</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
 
-      {isVoiceChatOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <Card className="max-w-2xl w-full">
-            <CardHeader>
-              <CardTitle>Voice Chat</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <VoiceChatModule
-                ticketId={ticketId || ''}
-                ticketNumber={ticket.ticket_number}
-                userRole="client"
-              />
-              <Button onClick={handleCloseVoiceChat} className="mt-4">
-                Close Voice Chat
-              </Button>
-            </CardContent>
-          </Card>
+          {/* Close Button */}
+          <div className="mt-8">
+            <Button 
+              onClick={() => navigate('/entry')}
+              className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg rounded-xl"
+            >
+              إغلاق
+            </Button>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

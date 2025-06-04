@@ -1,4 +1,3 @@
-
 import { initializeApp, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
@@ -7,13 +6,13 @@ import { getAuth, Auth } from 'firebase/auth';
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  databaseURL: "https://your-project-default-rtdb.firebaseio.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef123456"
+  apiKey: "AIzaSyCZjbRXBSC8aPL8hltxwLsz2v_ytogH4CE",
+  authDomain: "i-valet-qr-666.firebaseapp.com",
+  projectId: "i-valet-qr-666",
+  storageBucket: "i-valet-qr-666.firebasestorage.app",
+  messagingSenderId: "668007752772",
+  appId: "1:668007752772:web:d112da7a0f1a323c554811",
+  measurementId: "G-748WJFF0MZ"
 };
 
 let app: FirebaseApp;

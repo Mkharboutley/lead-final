@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Clock, CheckCircle } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 import { updateTicketStatus } from '../services/firestore';
 import { useToast } from '@/hooks/use-toast';
 
@@ -88,59 +87,55 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
   if (isComplete) {
     return (
-      <Card className="bg-green-50 border-green-200">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
-            <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
-            <div className="min-w-0 flex-1">
-              <h3 className="font-semibold text-green-800">Your valet has arrived!</h3>
-              <p className="text-sm text-green-600">
-                Your car should be ready for pickup now.
-              </p>
-            </div>
+      <div className="p-6 bg-green-500/10 backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
+          <div className="min-w-0 flex-1">
+            <h3 className="font-semibold text-green-800">Your valet has arrived!</h3>
+            <p className="text-sm text-green-700">
+              Your car should be ready for pickup now.
+            </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="bg-blue-50 border-blue-200">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-3 mb-3">
-          <Clock className="h-6 w-6 text-blue-600 flex-shrink-0" />
-          <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-blue-800">Valet En Route</h3>
-            <p className="text-sm text-blue-600">
-              Your car will arrive in
-            </p>
+    <div className="p-6 bg-blue-500/10 backdrop-blur-sm">
+      <div className="flex items-center gap-3 mb-4">
+        <Clock className="h-6 w-6 text-blue-600 flex-shrink-0" />
+        <div className="min-w-0 flex-1">
+          <h3 className="font-semibold text-blue-800">Valet En Route</h3>
+          <p className="text-sm text-blue-700">
+            Your car will arrive in
+          </p>
+        </div>
+      </div>
+      
+      <div className="space-y-4">
+        <div className="text-center">
+          <div className="text-3xl sm:text-4xl font-bold text-blue-900 mb-1">
+            {formatTime(timeRemaining)}
+          </div>
+          <div className="text-sm text-blue-700">
+            {Math.floor(timeRemaining / 60)} minutes remaining
           </div>
         </div>
         
-        <div className="space-y-3">
-          <div className="text-center">
-            <div className="text-2xl sm:text-3xl font-bold text-blue-900">
-              {formatTime(timeRemaining)}
-            </div>
-            <div className="text-sm text-blue-600">
-              {Math.floor(timeRemaining / 60)} minutes remaining
-            </div>
-          </div>
-          
-          {/* Progress bar */}
-          <div className="w-full bg-blue-200 rounded-full h-2">
-            <div 
-              className="bg-blue-600 h-2 rounded-full transition-all duration-1000 ease-out"
-              style={{ width: `${getProgressPercentage()}%` }}
-            />
-          </div>
-          
-          <div className="text-xs text-blue-500 text-center break-words">
-            Valet assigned at {assignedAt.toLocaleTimeString()}
-          </div>
+        {/* Progress bar with glassmorphism */}
+        <div className="w-full bg-white/30 backdrop-blur-sm rounded-full h-3 border border-white/40">
+          <div 
+            className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-1000 ease-out shadow-sm"
+            style={{ width: `${getProgressPercentage()}%` }}
+          />
         </div>
-      </CardContent>
-    </Card>
+        
+        <div className="text-xs text-blue-600 text-center break-words bg-white/20 backdrop-blur-sm rounded-lg p-2 border border-white/30">
+          Valet assigned at {assignedAt.toLocaleTimeString()}
+        </div>
+      </div>
+    </div>
   );
 };
 

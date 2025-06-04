@@ -139,7 +139,7 @@ const ClientTicket: React.FC = () => {
             </CardHeader>
             <CardContent>
               <VoiceChatModule
-                ticketId={ticketId}
+                ticketId={ticketId || ''}
                 ticketNumber={ticket.ticket_number}
                 userRole="client"
               />

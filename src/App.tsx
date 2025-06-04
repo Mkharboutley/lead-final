@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import AdminTickets from "./pages/AdminTickets";
 import CreateTicket from "./pages/CreateTicket";
 import ClientTicket from "./pages/ClientTicket";
+import TestVoiceSystem from "./pages/TestVoiceSystem";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
@@ -44,7 +45,12 @@ const App = () => (
                 <CreateTicket />
               </ProtectedRoute>
             } />
-            <Route path="/ticket/:id" element={<ClientTicket />} />
+            <Route path="/test-voice" element={
+              <ProtectedRoute>
+                <TestVoiceSystem />
+              </ProtectedRoute>
+            } />
+            <Route path="/ticket/:ticketId" element={<ClientTicket />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </MainLayout>

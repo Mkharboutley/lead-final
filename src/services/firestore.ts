@@ -30,6 +30,7 @@ export const createTicket = async (ticketData: Omit<Ticket, 'id' | 'created_at'>
     const newTicket = {
       ...ticketData,
       created_at: Timestamp.now(),
+      updated_at: Timestamp.now(),
     };
     
     const docRef = await addDoc(ticketsRef, newTicket);
@@ -88,74 +89,20 @@ export const getTicketById = async (ticketId: string): Promise<Ticket | null> =>
   }
 };
 
-// Get tickets by status
-export const getTicketsByStatus = async (status: TicketStatus): Promise<Ticket[]> => {
-  try {
-    const db = getFirestore();
-    const ticketsRef = collection(db, TICKETS_COLLECTION);
-    const q = query(
-      ticketsRef, 
-      where('status', '==', status),
-      orderBy('created_at', 'desc')
-    );
-    
-    const querySnapshot = await getDocs(q);
-    const tickets: Ticket[] = [];
-    
-    querySnapshot.forEach((doc) => {
-      tickets.push({
-        id: doc.id,
-        ...doc.data()
-      } as Ticket);
-    });
-    
-    console.log(`Retrieved ${tickets.length} tickets with status: ${status}`);
-    return tickets;
-  } catch (error) {
-    console.error('Error getting tickets by status:', error);
-    throw error;
-  }
-};
-
-// Get tickets by visitor ID
-export const getTicketsByVisitorId = async (visitorId: string): Promise<Ticket[]> => {
-  try {
-    const db = getFirestore();
-    const ticketsRef = collection(db, TICKETS_COLLECTION);
-    const q = query(
-      ticketsRef, 
-      where('visitor_id', '==', visitorId),
-      orderBy('created_at', 'desc')
-    );
-    
-    const querySnapshot = await getDocs(q);
-    const tickets: Ticket[] = [];
-    
-    querySnapshot.forEach((doc) => {
-      tickets.push({
-        id: doc.id,
-        ...doc.data()
-      } as Ticket);
-    });
-    
-    console.log(`Retrieved ${tickets.length} tickets for visitor: ${visitorId}`);
-    return tickets;
-  } catch (error) {
-    console.error('Error getting tickets by visitor ID:', error);
-    throw error;
-  }
-};
-
 // Update ticket
 export const updateTicket = async (ticketId: string, updates: Partial<Ticket>): Promise<void> => {
   try {
     const db = getFirestore();
     const ticketRef = doc(db, TICKETS_COLLECTION, ticketId);
     
-    // Remove id from updates if present
+    // Remove id from updates if present and add updated_at
     const { id, ...updateData } = updates;
+    const finalUpdateData = {
+      ...updateData,
+      updated_at: Timestamp.now()
+    };
     
-    await updateDoc(ticketRef, updateData);
+    await updateDoc(ticketRef, finalUpdateData);
     console.log('Ticket updated:', ticketId);
   } catch (error) {
     console.error('Error updating ticket:', error);
@@ -175,6 +122,7 @@ export const updateTicketStatus = async (
     
     const updateData: Partial<Ticket> = {
       status,
+      updated_at: Timestamp.now(),
       ...additionalData
     };
     
@@ -206,6 +154,35 @@ export const updateTicketStatus = async (
     console.log('Ticket status updated:', ticketId, status);
   } catch (error) {
     console.error('Error updating ticket status:', error);
+    throw error;
+  }
+};
+
+// Get tickets by status
+export const getTicketsByStatus = async (status: TicketStatus): Promise<Ticket[]> => {
+  try {
+    const db = getFirestore();
+    const ticketsRef = collection(db, TICKETS_COLLECTION);
+    const q = query(
+      ticketsRef, 
+      where('status', '==', status),
+      orderBy('created_at', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    const tickets: Ticket[] = [];
+    
+    querySnapshot.forEach((doc) => {
+      tickets.push({
+        id: doc.id,
+        ...doc.data()
+      } as Ticket);
+    });
+    
+    console.log(`Retrieved ${tickets.length} tickets with status: ${status}`);
+    return tickets;
+  } catch (error) {
+    console.error('Error getting tickets by status:', error);
     throw error;
   }
 };

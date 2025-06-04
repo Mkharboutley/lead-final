@@ -94,15 +94,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <main className="flex-1 relative">
         {children}
       </main>
-
-      {/* Footer */}
-      <footer className="bg-black/20 backdrop-blur-xl border-t border-white/10 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="text-center">
-            <Logo className="w-24 mx-auto" />
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

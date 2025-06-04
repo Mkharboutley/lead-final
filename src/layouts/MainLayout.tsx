@@ -5,6 +5,7 @@ import { getAuthInstance } from '../services/firebase';
 import { Button } from '@/components/ui/button';
 import { Car, Home, Plus, TestTube, LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import Logo from '@/components/Logo';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -51,13 +52,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center">
-                <div className="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/20 shadow-xl">
-                  <img 
-                    src="/lovable-uploads/b2860a75-786b-473b-9558-918995cd240e.png" 
-                    alt="iVALET" 
-                    className="h-8 w-auto"
-                  />
-                </div>
+                <Logo className="w-32" />
               </Link>
             </div>
 
@@ -104,8 +99,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       {/* Footer with Glass Morphism */}
       <footer className="bg-black/20 backdrop-blur-xl border-t border-white/10 mt-auto shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center text-sm text-gray-300">
-            © 2024 iVALET System. All rights reserved.
+          <div className="text-center">
+            <Logo className="w-24 mx-auto mb-4" />
+            <div className="text-sm text-gray-300">
+              © 2024 iVALET System. All rights reserved.
+            </div>
           </div>
         </div>
       </footer>

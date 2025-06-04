@@ -6,6 +6,7 @@ import { getUserRole } from '../services/userRoleUtils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import Logo from '@/components/Logo';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -61,11 +62,9 @@ const Login: React.FC = () => {
 
       {/* Main content */}
       <div className="w-full max-w-md relative z-10 p-6">
-        {/* Logo/Title */}
+        {/* Logo */}
         <div className="text-center mb-16">
-          <h1 className="text-7xl font-light tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-white/90 to-white/60 animate-fade-in">
-            iVALET
-          </h1>
+          <Logo className="w-48 mx-auto animate-fade-in" />
         </div>
 
         {/* Login Form Card */}

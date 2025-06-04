@@ -39,14 +39,13 @@ const CreateTicketForm: React.FC = () => {
       const latestTicketNumber = await getLatestTicketNumber();
       const newTicketNumber = latestTicketNumber + 1;
 
-      // Create ticket data with minimal required fields
+      // Create ticket data with minimal required fields - removed clientName, clientPhoneNumber, and guest_name
       const ticketData = {
         ticket_number: newTicketNumber,
         visitor_id: generateUniqueId(),
         plate_number: formData.plateNumber,
         car_model: formData.carModel,
         vehicle_info: `${formData.carModel} - ${formData.plateNumber}`,
-        guest_name: 'Guest', // Default value
         status: 'running' as const,
         requested_at: null,
         assigned_at: null,
@@ -58,8 +57,6 @@ const CreateTicketForm: React.FC = () => {
         pre_alert_sent: false,
         client_token: generateUniqueId(),
         location: '',
-        clientName: 'Guest',
-        clientPhoneNumber: '',
         description: '',
         priority: 'medium',
         voice_message_count: 0

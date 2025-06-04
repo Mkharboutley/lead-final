@@ -8,7 +8,6 @@ export interface Ticket {
   plate_number: string;
   car_model: string;
   vehicle_info: string;
-  guest_name: string;
   created_at: Timestamp;
   updated_at?: Timestamp;
   status: 'running' | 'requested' | 'assigned' | 'completed' | 'cancelled';
@@ -22,10 +21,8 @@ export interface Ticket {
   pre_alert_sent: boolean;
   client_token: string;
   
-  // Additional fields that may exist in Firestore
+  // Additional fields that may exist in Firestore - made optional since we removed them from creation
   location?: string;
-  clientName?: string;
-  clientPhoneNumber?: string;
   description?: string;
   priority?: string;
   voice_message_count?: number;

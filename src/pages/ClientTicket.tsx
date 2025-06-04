@@ -64,16 +64,23 @@ const ClientTicket: React.FC = () => {
 
   const handleTimerComplete = () => {
     toast({
-      title: "Worker Should Have Arrived!",
+      title: "Your valet has arrived!",
       description: "Your car should be ready for pickup now.",
     });
   };
 
+  // Determine if we should show the countdown timer
+  const shouldShowTimer = ticket && 
+    ticket.status === 'assigned' && 
+    ticket.eta_minutes && 
+    ticket.eta_minutes > 0 && 
+    ticket.assigned_at;
+
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
+    <div className="container mx-auto p-4 sm:p-6 max-w-4xl">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Ticket #{ticketNumber}</h1>
-        <div className="flex items-center gap-4 mt-2">
+        <h1 className="text-2xl sm:text-3xl font-bold">Ticket #{ticketNumber}</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-2">
           <p className="text-gray-600">Client Ticket View</p>
           {ticket && (
             <Badge variant={
@@ -87,13 +94,13 @@ const ClientTicket: React.FC = () => {
         </div>
       </div>
       
-      <div className="grid gap-6">
+      <div className="grid gap-4 sm:gap-6">
         {/* Notification Permission Request */}
         {('Notification' in window) && Notification.permission !== 'granted' && (
           <Card className="bg-blue-50 border-blue-200">
-            <CardContent className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Bell className="h-5 w-5 text-blue-500" />
+            <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <Bell className="h-5 w-5 text-blue-500 flex-shrink-0" />
                 <p className="text-blue-700 text-sm">
                   Enable notifications to receive alerts when admin responds
                 </p>
@@ -102,7 +109,7 @@ const ClientTicket: React.FC = () => {
                 variant="outline" 
                 size="sm" 
                 onClick={requestNotificationPermission}
-                className="bg-white hover:bg-blue-50"
+                className="bg-white hover:bg-blue-50 flex-shrink-0"
               >
                 Enable
               </Button>
@@ -110,11 +117,12 @@ const ClientTicket: React.FC = () => {
           </Card>
         )}
         
-        {/* Countdown Timer - Show when worker is assigned */}
-        {ticket && ticket.status === 'assigned' && ticket.eta_minutes && ticket.assigned_at && (
+        {/* Countdown Timer - Show only when appropriate */}
+        {shouldShowTimer && (
           <CountdownTimer
             etaMinutes={ticket.eta_minutes}
             assignedAt={ticket.assigned_at.toDate()}
+            ticketId={ticketId}
             onComplete={handleTimerComplete}
           />
         )}
@@ -129,50 +137,50 @@ const ClientTicket: React.FC = () => {
         {/* Ticket Information */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Car className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Car className="h-5 w-5 flex-shrink-0" />
               Ticket Information
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {ticket ? (
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
-                    <User className="h-4 w-4 text-gray-500" />
+                    <User className="h-4 w-4 text-gray-500 flex-shrink-0" />
                     <span className="font-medium">Guest:</span> 
-                    <span>{ticket.guest_name}</span>
+                    <span className="break-words">{ticket.guest_name}</span>
                   </div>
                   
                   <div className="flex items-center gap-2 text-sm">
-                    <Car className="h-4 w-4 text-gray-500" />
+                    <Car className="h-4 w-4 text-gray-500 flex-shrink-0" />
                     <span className="font-medium">Vehicle:</span>
-                    <span>{ticket.car_model}</span>
+                    <span className="break-words">{ticket.car_model}</span>
                   </div>
                   
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-medium ml-6">Plate:</span>
-                    <span>{ticket.plate_number}</span>
+                    <span className="break-words">{ticket.plate_number}</span>
                   </div>
                 </div>
                 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="h-4 w-4 text-gray-500" />
+                    <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
                     <span className="font-medium">Created:</span>
-                    <span>{ticket.created_at.toDate().toLocaleString()}</span>
+                    <span className="break-words text-xs sm:text-sm">{ticket.created_at.toDate().toLocaleString()}</span>
                   </div>
                   
                   {ticket.status === 'assigned' && ticket.eta_minutes && (
                     <div className="flex items-center gap-2 text-sm">
-                      <Clock className="h-4 w-4 text-gray-500" />
+                      <Clock className="h-4 w-4 text-gray-500 flex-shrink-0" />
                       <span className="font-medium">Original ETA:</span>
                       <span>{ticket.eta_minutes} minutes</span>
                     </div>
                   )}
                   
                   <div className="flex items-center gap-2 text-sm">
-                    <MessageCircle className="h-4 w-4 text-gray-500" />
+                    <MessageCircle className="h-4 w-4 text-gray-500 flex-shrink-0" />
                     <span className="font-medium">Status:</span>
                     <Badge variant="outline">
                       {ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)}

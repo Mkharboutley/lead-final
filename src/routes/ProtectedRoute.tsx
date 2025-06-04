@@ -65,7 +65,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const isAdminPath = adminOnlyPaths.some(path => location.pathname.startsWith(path));
     
     if (isAdminPath && userRole !== 'admin') {
-      return <Navigate to="/entry" replace />;
+      return <Navigate to="/entry\" replace />;
     }
   }
 

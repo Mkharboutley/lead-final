@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Car, AlertCircle, QrCode } from 'lucide-react';
+import { Car, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { createTicket, getLatestTicketNumber } from '../services/firestore';
 import { doc, updateDoc } from 'firebase/firestore';
 import { getFirestoreInstance } from '../services/firebase';
+import QRCode from 'qrcode';
 
 const CreateTicketForm: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const CreateTicketForm: React.FC = () => {
   const [error, setError] = useState('');
   const [showQR, setShowQR] = useState(false);
   const [ticketData, setTicketData] = useState<any>(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
 
   const [formData, setFormData] = useState({
     plateNumber: '',
@@ -30,6 +32,38 @@ const CreateTicketForm: React.FC = () => {
 
   const generateUniqueId = () => {
     return Math.random().toString(36).substr(2, 9);
+  };
+
+  const generateQRCode = async (data: any) => {
+    try {
+      // Create QR code data object
+      const qrData = {
+        ticketNumber: data.ticket_number,
+        plateNumber: data.plate_number,
+        carModel: data.car_model,
+        entryTime: new Date().toISOString(),
+        url: data.url
+      };
+
+      // Generate QR code as data URL
+      const qrCodeDataUrl = await QRCode.toDataURL(JSON.stringify(qrData), {
+        width: 400,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      });
+
+      setQrCodeUrl(qrCodeDataUrl);
+    } catch (err) {
+      console.error('Error generating QR code:', err);
+      toast({
+        title: "خطأ",
+        description: "فشل في إنشاء رمز QR",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,11 +107,14 @@ const CreateTicketForm: React.FC = () => {
         ticket_url: correctTicketUrl
       });
 
-      setTicketData({
+      const fullTicketData = {
         ...newTicketData,
         id: ticketId,
         url: correctTicketUrl
-      });
+      };
+
+      setTicketData(fullTicketData);
+      await generateQRCode(fullTicketData);
 
       toast({
         title: "تم إنشاء البطاقة بنجاح",
@@ -96,16 +133,21 @@ const CreateTicketForm: React.FC = () => {
   const handleClose = () => {
     setShowQR(false);
     setTicketData(null);
+    setQrCodeUrl('');
     setFormData({ plateNumber: '', carModel: '' });
     navigate('/entry');
   };
 
-  if (showQR && ticketData) {
+  if (showQR && ticketData && qrCodeUrl) {
     return (
       <Card className="glass-card">
         <CardContent className="p-8 text-center space-y-6">
-          <div className="relative mx-auto w-64 h-64 bg-white rounded-2xl p-6 shadow-xl">
-            <QrCode className="w-full h-full text-blue-600" />
+          <div className="relative mx-auto w-64 h-64 bg-white rounded-2xl p-4 shadow-xl">
+            <img 
+              src={qrCodeUrl} 
+              alt="QR Code"
+              className="w-full h-full object-contain"
+            />
           </div>
           
           <div className="space-y-2 text-white/80 text-right">

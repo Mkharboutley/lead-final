@@ -1,11 +1,12 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Clock, User, Car } from 'lucide-react';
+import { Clock, User, Car } from 'lucide-react';
 import { Ticket, TicketStatus } from '../types/Ticket';
 import StatusBadge from './StatusBadge';
+import PriorityBadge, { Priority } from './PriorityBadge';
+import VoiceMessageBadge from './VoiceMessageBadge';
 
 interface TicketListItemProps {
   ticket: Ticket;
@@ -24,6 +25,21 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
   isSelected,
   getStatusActions
 }) => {
+  // Calculate priority based on ticket age and status
+  const calculatePriority = (ticket: Ticket): Priority => {
+    const now = new Date();
+    const createdAt = ticket.created_at.toDate();
+    const ageInHours = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+    
+    if (ticket.status === 'requested' && ageInHours > 2) return 'urgent';
+    if (ticket.status === 'assigned' && ageInHours > 4) return 'high';
+    if (ticket.status === 'running' && ageInHours > 1) return 'medium';
+    return 'low';
+  };
+
+  // Simulate unread messages (in real app, this would come from props)
+  const hasUnreadMessages = messageCount > 0 && Math.random() > 0.7;
+
   return (
     <Card 
       className={`cursor-pointer transition-all hover:shadow-md ${
@@ -33,18 +49,18 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
-          <div>
-            <CardTitle className="text-lg">
+          <div className="flex-1">
+            <CardTitle className="text-lg flex items-center gap-2">
               Ticket #{ticket.ticket_number}
+              <PriorityBadge priority={calculatePriority(ticket)} size="sm" />
             </CardTitle>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
               <StatusBadge status={ticket.status} />
-              {messageCount > 0 && (
-                <Badge variant="outline" className="text-xs">
-                  <MessageCircle className="h-3 w-3 mr-1" />
-                  {messageCount} messages
-                </Badge>
-              )}
+              <VoiceMessageBadge 
+                messageCount={messageCount} 
+                hasUnread={hasUnreadMessages}
+                size="sm"
+              />
             </div>
           </div>
           <div className="text-sm text-gray-500">

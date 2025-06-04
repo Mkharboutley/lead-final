@@ -2,7 +2,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Volume2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { VoiceMessage } from '../types/VoiceMessage';
 import { subscribeToVoiceMessages } from '../services/realtime';
 import VoiceRecorder from './VoiceRecorder';
@@ -22,7 +23,9 @@ const VoiceChatModule: React.FC<VoiceChatModuleProps> = ({
 }) => {
   const [messages, setMessages] = useState<VoiceMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasNewMessages, setHasNewMessages] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const prevMessageCountRef = useRef(0);
 
   // Initialize Firebase when component mounts
   useEffect(() => {
@@ -39,7 +42,19 @@ const VoiceChatModule: React.FC<VoiceChatModuleProps> = ({
     
     const unsubscribe = subscribeToVoiceMessages(ticketId, (newMessages) => {
       console.log('Received voice messages:', newMessages);
+      
+      // Check for new messages from other users
+      if (newMessages.length > prevMessageCountRef.current && prevMessageCountRef.current > 0) {
+        const recentMessages = newMessages.slice(0, newMessages.length - prevMessageCountRef.current);
+        const hasNewFromOthers = recentMessages.some(msg => msg.sender !== userRole);
+        
+        if (hasNewFromOthers) {
+          setHasNewMessages(true);
+        }
+      }
+      
       setMessages(newMessages);
+      prevMessageCountRef.current = newMessages.length;
       setIsLoading(false);
     });
 
@@ -47,7 +62,7 @@ const VoiceChatModule: React.FC<VoiceChatModuleProps> = ({
       console.log('Unsubscribing from voice messages');
       unsubscribe();
     };
-  }, [ticketId]);
+  }, [ticketId, userRole]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -62,6 +77,11 @@ const VoiceChatModule: React.FC<VoiceChatModuleProps> = ({
   const handleMessageSent = () => {
     // Message will be automatically updated via real-time subscription
     console.log('Voice message sent');
+    setHasNewMessages(false); // Clear new message indicator when user sends a message
+  };
+
+  const handleViewMessages = () => {
+    setHasNewMessages(false);
   };
 
   if (isLoading) {
@@ -89,14 +109,20 @@ const VoiceChatModule: React.FC<VoiceChatModuleProps> = ({
           <MessageCircle className="h-5 w-5" />
           Voice Messages
           {messages.length > 0 && (
-            <span className="text-sm font-normal text-gray-500">
-              ({messages.length})
-            </span>
+            <Badge variant="outline" className="text-sm">
+              {messages.length}
+            </Badge>
+          )}
+          {hasNewMessages && (
+            <Badge variant="default" className="animate-pulse flex items-center gap-1">
+              <Volume2 className="h-3 w-3" />
+              New
+            </Badge>
           )}
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="flex-1 flex flex-col gap-4 p-4">
+      <CardContent className="flex-1 flex flex-col gap-4 p-4" onClick={handleViewMessages}>
         {/* Messages Area */}
         <ScrollArea ref={scrollAreaRef} className="flex-1 pr-4">
           {messages.length === 0 ? (

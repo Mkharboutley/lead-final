@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getUserRole } from '../services/userRoleUtils';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -11,11 +12,24 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<'admin' | 'user' | null>(null);
 
   useEffect(() => {
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setAuthenticated(!!user);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setAuthenticated(true);
+        try {
+          const role = await getUserRole();
+          setUserRole(role);
+        } catch (error) {
+          console.error('Error getting user role:', error);
+          setUserRole('user'); // Default to user
+        }
+      } else {
+        setAuthenticated(false);
+        setUserRole(null);
+      }
       setLoading(false);
     });
 
@@ -36,6 +50,24 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (!authenticated) {
     // Redirect to login page with return url
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Role-based redirects for root and dashboard paths
+  if (authenticated && userRole) {
+    const currentPath = location.pathname;
+    
+    // If user is on root path or dashboard, redirect based on role
+    if (currentPath === '/' || currentPath === '/dashboard') {
+      if (userRole === 'admin') {
+        // Admin goes to dashboard
+        if (currentPath !== '/dashboard') {
+          return <Navigate to="/dashboard" replace />;
+        }
+      } else {
+        // Regular users go to entry page
+        return <Navigate to="/entry" replace />;
+      }
+    }
   }
 
   return <>{children}</>;

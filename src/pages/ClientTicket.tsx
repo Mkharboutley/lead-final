@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTicket } from '../hooks/useTicket';
 
@@ -17,54 +17,30 @@ const ClientTicket: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center">
         <div className="text-white text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <div>Loading ticket details...</div>
-          {ticketId && <div className="text-sm text-gray-400 mt-2">Ticket ID: {ticketId}</div>}
+          <div>جاري تحميل بيانات البطاقة...</div>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !ticket) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center">
         <div className="text-white text-center">
-          <div className="text-red-400 mb-4">Error loading ticket</div>
-          <div className="text-sm text-gray-400">{error.message}</div>
-          {ticketId && <div className="text-sm text-gray-400 mt-2">Ticket ID: {ticketId}</div>}
+          <div className="text-red-200 mb-4">خطأ في تحميل البطاقة</div>
           <Button 
             onClick={() => navigate('/create-ticket')}
-            className="mt-4 bg-blue-600 hover:bg-blue-700"
+            className="mt-4 bg-white text-blue-600 hover:bg-gray-100"
           >
-            Go Back
+            العودة
           </Button>
         </div>
       </div>
     );
   }
-
-  if (!ticket) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="text-yellow-400 mb-4">Ticket not found</div>
-          {ticketId && <div className="text-sm text-gray-400 mt-2">Ticket ID: {ticketId}</div>}
-          <Button 
-            onClick={() => navigate('/create-ticket')}
-            className="mt-4 bg-blue-600 hover:bg-blue-700"
-          >
-            Create New Ticket
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  // Generate QR code URL (using a QR code service)
-  const qrCodeData = `Ticket: ${ticket.ticket_number}\nPlate: ${ticket.plate_number}\nVehicle: ${ticket.car_model}\nTime: ${ticket.created_at.toDate().toLocaleString()}`;
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrCodeData)}`;
 
   const formatArabicDate = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -73,68 +49,78 @@ const ClientTicket: React.FC = () => {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
+      second: '2-digit',
       hour12: true
     };
-    return date.toLocaleDateString('en-US', options);
+    return date.toLocaleDateString('en-GB', options);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      {/* Header with back button */}
-      <div className="flex items-center p-4">
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => navigate('/create-ticket')}
-          className="text-white hover:bg-gray-800"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 text-white" dir="rtl">
+      {/* Header with iVALET branding */}
+      <div className="pt-16 pb-8 text-center">
+        <h1 className="text-4xl font-light tracking-[0.5em] text-white">
+          iVALET
+        </h1>
       </div>
 
-      {/* Main content */}
-      <div className="flex flex-col items-center justify-center px-6 py-12">
-        {/* QR Code Card */}
-        <div className="bg-gray-700/50 backdrop-blur-sm rounded-3xl p-8 w-full max-w-sm">
-          {/* QR Code */}
-          <div className="bg-white rounded-2xl p-6 mb-6">
-            <img 
-              src={qrCodeUrl}
-              alt="Ticket QR Code"
-              className="w-full h-auto"
-            />
+      {/* Main content card */}
+      <div className="flex flex-col items-center justify-center px-6">
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 w-full max-w-sm border border-white/20">
+          
+          {/* Clock icon and header */}
+          <div className="flex items-center justify-center mb-6">
+            <div className="bg-white/20 rounded-full p-4 ml-4">
+              <Clock className="h-8 w-8 text-white" />
+            </div>
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-white">معلومات</h2>
+              <h2 className="text-xl font-semibold text-white">البطاقة</h2>
+            </div>
           </div>
 
-          {/* Ticket Information in Arabic style */}
-          <div className="text-center space-y-3 text-white">
+          <div className="border-t border-white/30 my-6"></div>
+
+          {/* Ticket Information */}
+          <div className="space-y-4 text-center text-white">
             <div className="text-lg">
-              <span className="text-gray-300">رقم التذكرة: </span>
-              <span className="font-bold">{String(ticket.ticket_number).padStart(4, '0')}</span>
+              <span className="text-white/80">رقم البطاقة : </span>
+              <span className="font-bold">{String(ticket.ticket_number).padStart(2, '0')}</span>
             </div>
             
             <div className="text-lg">
-              <span className="text-gray-300">رقم اللوحة: </span>
+              <span className="text-white/80">رقم اللوحة : </span>
               <span className="font-bold">{ticket.plate_number}</span>
             </div>
             
             <div className="text-lg">
-              <span className="text-gray-300">موديل السيارة: </span>
+              <span className="text-white/80">موديل السيارة : </span>
               <span className="font-bold">{ticket.car_model}</span>
             </div>
             
             <div className="text-lg">
-              <span className="text-gray-300">وقت الدخول: </span>
+              <span className="text-white/80">وقت الدخول : </span>
               <span className="font-bold">{formatArabicDate(ticket.created_at.toDate())}</span>
+            </div>
+
+            <div className="text-lg">
+              <span className="text-white/80">الحالة : </span>
+              <span className="font-bold">مركونة</span>
             </div>
           </div>
 
-          {/* Close Button */}
-          <div className="mt-8">
+          {/* Action Buttons */}
+          <div className="mt-8 space-y-3">
             <Button 
-              onClick={() => navigate('/create-ticket')}
-              className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg rounded-xl"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 text-lg rounded-xl border border-white/20"
             >
-              إغلاق
+              اطلب سيارتك
+            </Button>
+            
+            <Button 
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg rounded-xl border border-white/20"
+            >
+              Record Message
             </Button>
           </div>
         </div>

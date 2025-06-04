@@ -1,6 +1,4 @@
-
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -13,7 +11,6 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { getFirestoreInstance } from '../services/firebase';
 
 const CreateTicketForm: React.FC = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -37,11 +34,9 @@ const CreateTicketForm: React.FC = () => {
     setError('');
 
     try {
-      // Get the next ticket number
       const latestTicketNumber = await getLatestTicketNumber();
       const newTicketNumber = latestTicketNumber + 1;
 
-      // Create ticket data with minimal required fields - temporarily set ticket_url to empty
       const ticketData = {
         ticket_number: newTicketNumber,
         visitor_id: generateUniqueId(),
@@ -55,7 +50,7 @@ const CreateTicketForm: React.FC = () => {
         cancelled_at: null,
         completed_at: null,
         eta_minutes: null,
-        ticket_url: '', // Will be updated after creation
+        ticket_url: '',
         pre_alert_sent: false,
         client_token: generateUniqueId(),
         location: '',
@@ -64,11 +59,8 @@ const CreateTicketForm: React.FC = () => {
         voice_message_count: 0
       };
 
-      console.log('Creating ticket with data:', ticketData);
       const ticketId = await createTicket(ticketData);
-      console.log('Ticket created with ID:', ticketId);
-
-      // Now update the ticket with the correct URL using the real document ID
+      
       const firestore = getFirestoreInstance();
       const ticketRef = doc(firestore, 'tickets', ticketId);
       const correctTicketUrl = `${window.location.origin}/ticket/${ticketId}`;
@@ -77,32 +69,30 @@ const CreateTicketForm: React.FC = () => {
         ticket_url: correctTicketUrl
       });
 
-      console.log('Ticket URL updated to:', correctTicketUrl);
-
       toast({
-        title: "Ticket Created Successfully",
-        description: `Ticket #${newTicketNumber} has been created`
+        title: "تم إنشاء البطاقة بنجاح",
+        description: `تم إنشاء البطاقة رقم ${newTicketNumber}`
       });
 
-      navigate(`/ticket/${ticketId}`);
+      window.location.href = correctTicketUrl;
     } catch (err) {
       console.error('Error creating ticket:', err);
-      setError('Failed to create ticket. Please try again.');
+      setError('فشل في إنشاء البطاقة. يرجى المحاولة مرة أخرى.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Card className="bg-white/95 backdrop-blur-sm">
+    <Card className="glass-card">
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-center justify-center">
           <Car className="h-5 w-5" />
-          New Valet Ticket
+          أدخل معلومات السيارة
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" dir="rtl">
           {error && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
@@ -110,9 +100,8 @@ const CreateTicketForm: React.FC = () => {
             </Alert>
           )}
 
-          {/* Plate Number */}
           <div className="space-y-2">
-            <Label htmlFor="plateNumber">License Plate *</Label>
+            <Label htmlFor="plateNumber">رقم اللوحة</Label>
             <Input
               id="plateNumber"
               placeholder="ABC 1234"
@@ -123,9 +112,8 @@ const CreateTicketForm: React.FC = () => {
             />
           </div>
 
-          {/* Car Model */}
           <div className="space-y-2">
-            <Label htmlFor="carModel">Vehicle Model *</Label>
+            <Label htmlFor="carModel">موديل السيارة</Label>
             <Input
               id="carModel"
               placeholder="Toyota Camry"
@@ -136,14 +124,15 @@ const CreateTicketForm: React.FC = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <div className="pt-4">
             <Button 
               type="submit" 
               disabled={isLoading}
-              className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-4 text-lg rounded-xl"
+              variant="gradient"
+              size="lg"
+              className="w-full"
             >
-              {isLoading ? 'Creating...' : 'Create Ticket'}
+              {isLoading ? 'جاري الإنشاء...' : 'إنشاء البطاقة'}
             </Button>
           </div>
         </form>

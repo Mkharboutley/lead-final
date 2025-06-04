@@ -10,6 +10,7 @@ import CreateTicket from "./pages/CreateTicket";
 import ClientTicket from "./pages/ClientTicket";
 import TestVoiceSystem from "./pages/TestVoiceSystem";
 import Entry from "./pages/Entry";
+import ScanClose from "./components/ScanClose";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
@@ -40,6 +41,11 @@ const App = () => (
             <Route path="/create-ticket" element={
               <ProtectedRoute>
                 <CreateTicket />
+              </ProtectedRoute>
+            } />
+            <Route path="/scan-close" element={
+              <ProtectedRoute>
+                <ScanClose />
               </ProtectedRoute>
             } />
             <Route path="/test-voice" element={

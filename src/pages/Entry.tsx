@@ -40,10 +40,10 @@ const Entry: React.FC = () => {
           </Button>
 
           <Button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/scan-close')}
             variant="outline"
             size="lg"
-            className="w-full"
+            className="w-full glass-button"
           >
             <QrCode className="h-5 w-5 ml-2" />
             إغلاق بطاقة

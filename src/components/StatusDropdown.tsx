@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Play, UserPlus, CheckCircle, XCircle } from 'lucide-react';
+import { ChevronDown, Play, UserPlus, CheckCircle, XCircle, Truck } from 'lucide-react';
 import { Ticket, TicketStatus } from '../types/Ticket';
 
 interface StatusDropdownProps {
@@ -28,7 +28,7 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
       case 'requested':
         return <UserPlus className="h-4 w-4" />;
       case 'assigned':
-        return <UserPlus className="h-4 w-4" />;
+        return <Truck className="h-4 w-4" />;
       case 'completed':
         return <CheckCircle className="h-4 w-4" />;
       case 'cancelled':
@@ -39,25 +39,37 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
   const getAvailableActions = () => {
     const actions = [];
     
+    // Prevent any status changes if already completed
+    if (ticket.status === 'completed') {
+      return [];
+    }
+    
     switch (ticket.status) {
       case 'running':
+        // Only admin can change from running to requested
         actions.push(
           { status: 'requested' as TicketStatus, label: 'Mark as Requested', icon: <UserPlus className="h-4 w-4" /> }
         );
         break;
+        
       case 'requested':
+        // Can assign worker or mark as running (manual override)
         actions.push(
-          { status: 'assigned' as TicketStatus, label: 'Assign Worker', icon: <UserPlus className="h-4 w-4" />, isAssign: true }
+          { status: 'assigned' as TicketStatus, label: 'Assign Worker', icon: <Truck className="h-4 w-4" />, isAssign: true },
+          { status: 'running' as TicketStatus, label: 'Override to Running', icon: <Play className="h-4 w-4" /> }
         );
         break;
+        
       case 'assigned':
+        // Can complete or override back to requested
         actions.push(
-          { status: 'completed' as TicketStatus, label: 'Mark Complete', icon: <CheckCircle className="h-4 w-4" /> }
+          { status: 'completed' as TicketStatus, label: 'Mark Complete', icon: <CheckCircle className="h-4 w-4" /> },
+          { status: 'requested' as TicketStatus, label: 'Back to Requested', icon: <UserPlus className="h-4 w-4" /> }
         );
         break;
     }
     
-    // Add cancel option for all active statuses
+    // Add cancel option for all active statuses (except completed)
     if (['running', 'requested', 'assigned'].includes(ticket.status)) {
       actions.push(
         { status: 'cancelled' as TicketStatus, label: 'Cancel Ticket', icon: <XCircle className="h-4 w-4" /> }
@@ -70,7 +82,11 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
   const actions = getAvailableActions();
 
   if (actions.length === 0) {
-    return null;
+    return (
+      <Button variant="outline" size="sm" disabled className="opacity-50">
+        No Actions Available
+      </Button>
+    );
   }
 
   return (

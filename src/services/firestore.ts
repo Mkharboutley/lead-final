@@ -178,19 +178,27 @@ export const updateTicketStatus = async (
       ...additionalData
     };
     
-    // Set timestamp based on status
+    // Set timestamp based on status - only set once per status
     switch (status) {
       case 'requested':
-        updateData.requested_at = Timestamp.now();
+        if (!additionalData?.requested_at) {
+          updateData.requested_at = Timestamp.now();
+        }
         break;
       case 'assigned':
-        updateData.assigned_at = Timestamp.now();
+        if (!additionalData?.assigned_at) {
+          updateData.assigned_at = Timestamp.now();
+        }
         break;
       case 'completed':
-        updateData.completed_at = Timestamp.now();
+        if (!additionalData?.completed_at) {
+          updateData.completed_at = Timestamp.now();
+        }
         break;
       case 'cancelled':
-        updateData.cancelled_at = Timestamp.now();
+        if (!additionalData?.cancelled_at) {
+          updateData.cancelled_at = Timestamp.now();
+        }
         break;
     }
     

@@ -38,7 +38,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
       case 'running':
         return 'Running';
       default:
-        return status.charAt(0).toUpperCase() + status.slice(1);
+        return 'Unknown';
     }
   };
 

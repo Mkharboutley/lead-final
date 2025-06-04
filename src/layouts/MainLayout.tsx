@@ -52,7 +52,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <Link to="/dashboard" className="flex items-center space-x-3">
+              <Link to="/dashboard" className="flex items-center">
                 <div className="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/20 shadow-xl">
                   <img 
                     src="/lovable-uploads/b2860a75-786b-473b-9558-918995cd240e.png" 
@@ -60,7 +60,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     className="h-8 w-auto"
                   />
                 </div>
-                <span className="text-2xl font-bold text-white">iVALET System</span>
               </Link>
             </div>
 

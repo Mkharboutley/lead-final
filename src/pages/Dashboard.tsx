@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -79,8 +78,6 @@ const Dashboard: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-              <p className="text-gray-300">Manage tickets, drivers, and system configuration</p>
               {hasPermissionError && (
                 <div className="flex items-center gap-2 mt-2 text-yellow-400">
                   <AlertTriangle className="h-4 w-4" />

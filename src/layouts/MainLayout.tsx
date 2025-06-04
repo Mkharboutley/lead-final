@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { getAuthInstance } from '../services/firebase';
 import { Button } from '@/components/ui/button';
 import { Car, Home, Plus, BarChart3, TestTube, LogOut } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -11,6 +14,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
+  const { toast } = useToast();
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
@@ -18,6 +22,24 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     { name: 'Admin Tickets', href: '/admin/tickets', icon: BarChart3 },
     { name: 'Test Voice', href: '/test-voice', icon: TestTube },
   ];
+
+  const handleLogout = async () => {
+    try {
+      const auth = getAuthInstance();
+      await signOut(auth);
+      toast({
+        title: "Logged out successfully",
+        description: "You have been signed out of the system"
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast({
+        title: "Logout failed",
+        description: "There was an error signing out",
+        variant: "destructive"
+      });
+    }
+  };
 
   if (isLoginPage) {
     return <>{children}</>;
@@ -59,7 +81,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </nav>
 
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" onClick={() => window.location.href = '/login'}>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
                 <LogOut className="h-4 w-4 mr-1" />
                 Logout
               </Button>

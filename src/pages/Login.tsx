@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuthInstance } from '../services/firebase';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -15,6 +17,7 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -23,18 +26,20 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      // Simulate login - replace with actual authentication
-      if (email === 'admin@valet.com' && password === 'admin123') {
-        toast({
-          title: "Login Successful",
-          description: "Welcome to the Valet System"
-        });
-        navigate('/dashboard');
-      } else {
-        setError('Invalid email or password');
-      }
-    } catch (err) {
-      setError('Login failed. Please try again.');
+      const auth = getAuthInstance();
+      await signInWithEmailAndPassword(auth, email, password);
+      
+      toast({
+        title: "Login Successful",
+        description: "Welcome to the Valet System"
+      });
+
+      // Redirect to the intended page or dashboard
+      const from = location.state?.from?.pathname || '/dashboard';
+      navigate(from, { replace: true });
+    } catch (err: any) {
+      console.error('Login error:', err);
+      setError(err.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +73,7 @@ const Login: React.FC = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@valet.com"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -102,9 +107,7 @@ const Login: React.FC = () => {
             </Button>
 
             <div className="text-center text-sm text-gray-600 mt-4">
-              <p>Demo credentials:</p>
-              <p>Email: admin@valet.com</p>
-              <p>Password: admin123</p>
+              <p>Use your Firebase Auth credentials to sign in</p>
             </div>
           </form>
         </CardContent>

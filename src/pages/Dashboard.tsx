@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -14,7 +15,8 @@ import {
   MessageSquare,
   Bell,
   Settings,
-  UserCog
+  UserCog,
+  AlertTriangle
 } from 'lucide-react';
 import { useTicketData } from '../hooks/useTicketData';
 import { useAdminConfig } from '../hooks/useAdminConfig';
@@ -35,6 +37,7 @@ const Dashboard: React.FC = () => {
     drivers, 
     etaConfig, 
     isLoading: isConfigLoading,
+    hasPermissionError,
     handleAddDriver,
     handleToggleDriverAvailability,
     handleRemoveDriver,
@@ -78,6 +81,12 @@ const Dashboard: React.FC = () => {
             <div>
               <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
               <p className="text-gray-300">Manage tickets, drivers, and system configuration</p>
+              {hasPermissionError && (
+                <div className="flex items-center gap-2 mt-2 text-yellow-400">
+                  <AlertTriangle className="h-4 w-4" />
+                  <span className="text-sm">Limited access mode - Some admin features may be restricted</span>
+                </div>
+              )}
             </div>
             <div className="flex space-x-3">
               <Button 
@@ -105,6 +114,25 @@ const Dashboard: React.FC = () => {
         <div className="mb-8">
           <DashboardStats tickets={tickets} />
         </div>
+
+        {/* Permission Error Warning */}
+        {hasPermissionError && (
+          <Card className="mb-6 bg-yellow-500/20 backdrop-blur-xl border border-yellow-400/30 shadow-2xl">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-yellow-400" />
+                <div>
+                  <h3 className="font-medium text-yellow-200">Limited Admin Access</h3>
+                  <p className="text-sm text-yellow-300">
+                    You are running in limited access mode. Some admin features like driver management and configuration 
+                    may not be fully available due to Firebase permission restrictions. Contact your system administrator 
+                    to configure proper Firestore security rules.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Main Content with Enhanced Glass Morphism */}
         <div className="mt-8">

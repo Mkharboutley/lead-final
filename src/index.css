@@ -32,20 +32,47 @@
     @apply border-border;
   }
   body {
-    @apply bg-[#0a0f1a] text-foreground overflow-hidden;
+    @apply bg-[#0a0f1a] text-foreground;
   }
-  /* Allow scrolling only on dashboard */
-  .dashboard-content {
+  /* Make all pages scrollable except dashboard */
+  main {
     @apply overflow-auto;
   }
+  /* Dashboard specific styles */
+  .dashboard-content {
+    height: calc(100vh - 4rem); /* Subtract header height */
+    @apply overflow-hidden;
+  }
 }
 
-/* Fixed height container for non-dashboard pages */
-.fixed-height-container {
-  @apply h-[100dvh] flex flex-col overflow-hidden;
+/* Ticket list container */
+.ticket-list {
+  height: calc(100vh - 20rem); /* Adjust based on header + stats height */
+  @apply overflow-y-auto pr-2;
 }
 
-/* Animated background gradients */
+/* Glass morphism styles */
+.glass-card {
+  @apply bg-white/[0.08] backdrop-blur-2xl rounded-3xl
+    border border-white/[0.1] shadow-[0_8px_32px_rgba(0,0,0,0.3)]
+    hover:bg-white/[0.1] transition-all duration-500;
+}
+
+.glass-button {
+  @apply relative overflow-hidden bg-white/10 backdrop-blur-xl 
+    border border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4)]
+    hover:bg-white/[0.15] hover:border-white/[0.25] hover:scale-[1.02]
+    active:scale-[0.98] transition-all duration-300;
+}
+
+.glass-input {
+  @apply h-14 bg-white/[0.05] border-white/[0.1] text-white 
+    placeholder:text-gray-400 rounded-2xl px-6
+    focus:bg-white/[0.08] focus:border-white/[0.15] 
+    transition-all duration-300;
+}
+
+/* Animated background */
 .animated-gradient {
   background: linear-gradient(
     45deg,
@@ -57,38 +84,13 @@
   animation: gradient 15s ease infinite;
 }
 
-.glass-button {
-  @apply relative overflow-hidden bg-white/10 backdrop-blur-xl 
-    border border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4)]
-    hover:bg-white/[0.15] hover:border-white/[0.25] hover:scale-[1.02]
-    active:scale-[0.98] transition-all duration-300;
-}
-
-.glass-card {
-  @apply bg-white/[0.08] backdrop-blur-2xl rounded-3xl
-    border border-white/[0.1] shadow-[0_8px_32px_rgba(0,0,0,0.3)]
-    hover:bg-white/[0.1] transition-all duration-500;
-}
-
-.glass-input {
-  @apply h-14 bg-white/[0.05] border-white/[0.1] text-white 
-    placeholder:text-gray-400 rounded-2xl px-6
-    focus:bg-white/[0.08] focus:border-white/[0.15] 
-    transition-all duration-300;
-}
-
 @keyframes gradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-  100% { transform: translateY(0px); }
-}
-
-.floating {
-  animation: float 6s ease-in-out infinite;
+/* Ticket card height */
+.ticket-card {
+  @apply h-auto max-h-[12rem] overflow-hidden;
 }

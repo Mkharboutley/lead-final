@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Ticket, TicketStatus } from '../types/Ticket';
@@ -26,8 +25,8 @@ const TicketList: React.FC<TicketListProps> = ({
   selectedTicketId
 }) => {
   return (
-    <ScrollArea className="h-[600px] pr-4">
-      <div className="space-y-4">
+    <div className="ticket-list">
+      <div className="space-y-3">
         {tickets.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             No tickets found
@@ -48,7 +47,7 @@ const TicketList: React.FC<TicketListProps> = ({
           ))
         )}
       </div>
-    </ScrollArea>
+    </div>
   );
 };
 

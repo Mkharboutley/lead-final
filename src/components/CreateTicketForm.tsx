@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,8 +18,8 @@ const CreateTicketForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showQR, setShowQR] = useState(false);
-  const [ticketData, setTicketData] = useState<any>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
+  const [ticketUrl, setTicketUrl] = useState<string>('');
 
   const [formData, setFormData] = useState({
     plateNumber: '',
@@ -34,19 +34,9 @@ const CreateTicketForm: React.FC = () => {
     return Math.random().toString(36).substr(2, 9);
   };
 
-  const generateQRCode = async (data: any) => {
+  const generateQRCode = async (url: string) => {
     try {
-      // Create QR code data object
-      const qrData = {
-        ticketNumber: data.ticket_number,
-        plateNumber: data.plate_number,
-        carModel: data.car_model,
-        entryTime: new Date().toISOString(),
-        url: data.url
-      };
-
-      // Generate QR code as data URL
-      const qrCodeDataUrl = await QRCode.toDataURL(JSON.stringify(qrData), {
+      const qrCodeDataUrl = await QRCode.toDataURL(url, {
         width: 400,
         margin: 2,
         color: {
@@ -54,7 +44,6 @@ const CreateTicketForm: React.FC = () => {
           light: '#FFFFFF'
         }
       });
-
       setQrCodeUrl(qrCodeDataUrl);
     } catch (err) {
       console.error('Error generating QR code:', err);
@@ -98,30 +87,18 @@ const CreateTicketForm: React.FC = () => {
       };
 
       const ticketId = await createTicket(newTicketData);
+      const correctTicketUrl = `${window.location.origin}/ticket/${ticketId}`;
       
       const firestore = getFirestoreInstance();
       const ticketRef = doc(firestore, 'tickets', ticketId);
-      const correctTicketUrl = `${window.location.origin}/ticket/${ticketId}`;
-      
       await updateDoc(ticketRef, {
         ticket_url: correctTicketUrl
       });
 
-      const fullTicketData = {
-        ...newTicketData,
-        id: ticketId,
-        url: correctTicketUrl
-      };
-
-      setTicketData(fullTicketData);
-      await generateQRCode(fullTicketData);
-
-      toast({
-        title: "تم إنشاء البطاقة بنجاح",
-        description: `تم إنشاء البطاقة رقم ${newTicketNumber}`
-      });
-
+      setTicketUrl(correctTicketUrl);
+      await generateQRCode(correctTicketUrl);
       setShowQR(true);
+
     } catch (err) {
       console.error('Error creating ticket:', err);
       setError('فشل في إنشاء البطاقة. يرجى المحاولة مرة أخرى.');
@@ -132,31 +109,23 @@ const CreateTicketForm: React.FC = () => {
 
   const handleClose = () => {
     setShowQR(false);
-    setTicketData(null);
     setQrCodeUrl('');
+    setTicketUrl('');
     setFormData({ plateNumber: '', carModel: '' });
     navigate('/entry');
   };
 
-  if (showQR && ticketData && qrCodeUrl) {
+  if (showQR && qrCodeUrl) {
     return (
-      <Card className="glass-card">
-        <CardContent className="p-8 text-center space-y-6">
-          <div className="relative mx-auto w-64 h-64 bg-white rounded-2xl p-4 shadow-xl">
+      <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4">
+        <div className="max-w-sm w-full">
+          <div className="bg-white rounded-2xl p-6 shadow-2xl">
             <img 
               src={qrCodeUrl} 
               alt="QR Code"
-              className="w-full h-full object-contain"
+              className="w-full h-auto"
             />
           </div>
-          
-          <div className="space-y-2 text-white/80 text-right">
-            <p>رقم التذكرة: {ticketData.ticket_number}</p>
-            <p>رقم اللوحة: {ticketData.plate_number}</p>
-            <p>موديل السيارة: {ticketData.car_model}</p>
-            <p>وقت الدخول: {new Date().toLocaleString('ar')}</p>
-          </div>
-
           <Button
             onClick={handleClose}
             variant="gradient"
@@ -165,8 +134,8 @@ const CreateTicketForm: React.FC = () => {
           >
             إغلاق
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
@@ -211,17 +180,15 @@ const CreateTicketForm: React.FC = () => {
             />
           </div>
 
-          <div className="pt-4">
-            <Button 
-              type="submit" 
-              disabled={isLoading}
-              variant="gradient"
-              size="lg"
-              className="w-full"
-            >
-              {isLoading ? 'جاري الإنشاء...' : 'إنشاء البطاقة'}
-            </Button>
-          </div>
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            variant="gradient"
+            size="lg"
+            className="w-full mt-4"
+          >
+            {isLoading ? 'جاري الإنشاء...' : 'إنشاء البطاقة'}
+          </Button>
         </form>
       </CardContent>
     </Card>

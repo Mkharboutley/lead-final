@@ -32,56 +32,58 @@
     @apply border-border;
   }
   body {
-    @apply bg-[#0a0f1a] text-foreground;
+    @apply bg-[#0a0f1a] text-foreground overflow-x-hidden;
   }
-  /* Make all pages scrollable except dashboard */
   main {
     @apply overflow-auto;
   }
-  /* Dashboard specific styles */
-  .dashboard-content {
-    height: calc(100vh - 4rem); /* Subtract header height */
-    @apply overflow-hidden;
-  }
 }
 
-/* Ticket list container */
-.ticket-list {
-  height: calc(100vh - 20rem); /* Adjust based on header + stats height */
-  @apply overflow-y-auto pr-2;
-}
-
-/* Glass morphism styles */
-.glass-card {
-  @apply bg-white/[0.08] backdrop-blur-2xl rounded-3xl
-    border border-white/[0.1] shadow-[0_8px_32px_rgba(0,0,0,0.3)]
-    hover:bg-white/[0.1] transition-all duration-500;
-}
-
-.glass-button {
-  @apply relative overflow-hidden bg-white/10 backdrop-blur-xl 
-    border border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4)]
-    hover:bg-white/[0.15] hover:border-white/[0.25] hover:scale-[1.02]
-    active:scale-[0.98] transition-all duration-300;
-}
-
-.glass-input {
-  @apply h-14 bg-white/[0.05] border-white/[0.1] text-white 
-    placeholder:text-gray-400 rounded-2xl px-6
-    focus:bg-white/[0.08] focus:border-white/[0.15] 
+/* Enhanced Glass Morphism */
+.glass-morphism {
+  @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.05]
+    shadow-[0_8px_32px_rgba(0,0,0,0.12)]
+    hover:bg-white/[0.06] hover:border-white/[0.08]
     transition-all duration-300;
 }
 
-/* Animated background */
-.animated-gradient {
-  background: linear-gradient(
-    45deg,
-    rgba(59, 130, 246, 0.2),
-    rgba(147, 51, 234, 0.2),
-    rgba(79, 70, 229, 0.2)
-  );
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
+.glass-morphism-strong {
+  @apply bg-white/[0.08] backdrop-blur-2xl border border-white/[0.1]
+    shadow-[0_8px_32px_rgba(0,0,0,0.2)]
+    hover:bg-white/[0.12] hover:border-white/[0.15]
+    transition-all duration-300;
+}
+
+.glass-card {
+  @apply glass-morphism-strong rounded-2xl;
+}
+
+.glass-button {
+  @apply glass-morphism rounded-xl
+    active:scale-[0.98] disabled:opacity-50
+    hover:shadow-[0_8px_32px_rgba(255,255,255,0.1)];
+}
+
+.glass-input {
+  @apply glass-morphism rounded-xl h-12 px-4
+    placeholder:text-white/40 text-white
+    focus:bg-white/[0.08] focus:border-white/[0.15];
+}
+
+/* Animated Background */
+.animated-bg {
+  @apply absolute inset-0 overflow-hidden;
+}
+
+.animated-bg::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20
+    animate-gradient bg-[length:400%_400%];
+}
+
+.animated-bg::after {
+  content: '';
+  @apply absolute inset-0 backdrop-blur-3xl;
 }
 
 @keyframes gradient {
@@ -90,7 +92,24 @@
   100% { background-position: 0% 50%; }
 }
 
-/* Ticket card height */
+/* Glowing Orbs */
+.glow-orb {
+  @apply absolute rounded-full opacity-50 blur-[100px] animate-pulse;
+}
+
+.glow-orb-1 {
+  @apply glow-orb bg-blue-500/30 w-[500px] h-[500px] -top-[250px] -left-[250px];
+}
+
+.glow-orb-2 {
+  @apply glow-orb bg-purple-500/30 w-[600px] h-[600px] -bottom-[300px] -right-[300px];
+}
+
+/* Ticket List */
+.ticket-list {
+  @apply h-[calc(100vh-20rem)] overflow-y-auto pr-4 space-y-4;
+}
+
 .ticket-card {
-  @apply h-auto max-h-[12rem] overflow-hidden;
+  @apply glass-morphism-strong rounded-xl p-4 h-auto max-h-[10rem];
 }

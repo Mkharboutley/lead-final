@@ -17,10 +17,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log('Auth state changed:', user?.email);
       if (user) {
         setAuthenticated(true);
         try {
           const role = await getUserRole();
+          console.log('User role:', role);
           setUserRole(role);
         } catch (error) {
           console.error('Error getting user role:', error);
@@ -52,19 +54,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Role-based redirects for root and dashboard paths
+  // Role-based redirects for root and entry paths
   if (authenticated && userRole) {
     const currentPath = location.pathname;
+    console.log('Current path:', currentPath, 'User role:', userRole);
     
-    // If user is on root path or dashboard, redirect based on role
-    if (currentPath === '/' || currentPath === '/dashboard') {
+    // If user is on root path, entry page, or dashboard, redirect based on role
+    if (currentPath === '/' || currentPath === '/entry') {
       if (userRole === 'admin') {
-        // Admin goes to dashboard
-        if (currentPath !== '/dashboard') {
-          return <Navigate to="/dashboard" replace />;
-        }
+        console.log('Redirecting admin to dashboard');
+        return <Navigate to="/dashboard" replace />;
       } else {
-        // Regular users go to entry page
+        console.log('Redirecting user to entry');
         return <Navigate to="/entry" replace />;
       }
     }

@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { getAuthInstance } from '../services/firebase';
+import { getUserRole } from '../services/userRoleUtils';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -27,16 +27,26 @@ const Login: React.FC = () => {
 
     try {
       const auth = getAuthInstance();
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log('Login successful:', userCredential.user.email);
+      
+      // Get user role and redirect accordingly
+      const role = await getUserRole();
+      console.log('User role after login:', role);
       
       toast({
         title: "Login Successful",
         description: "Welcome to the Valet System"
       });
 
-      // Redirect to the intended page or dashboard
-      const from = location.state?.from?.pathname || '/dashboard';
-      navigate(from, { replace: true });
+      // Redirect based on role
+      if (role === 'admin') {
+        console.log('Redirecting admin to dashboard');
+        navigate('/dashboard', { replace: true });
+      } else {
+        console.log('Redirecting user to entry');
+        navigate('/entry', { replace: true });
+      }
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || 'Login failed. Please try again.');

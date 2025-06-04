@@ -8,6 +8,7 @@ export const TICKET_FIELDS = {
   guestName: "guestName",
   status: "status",
   created_at: "created_at",
+  updatedAt: "updatedAt",
   assignedWorker: "assignedWorker",
   assignedAt: "assignedAt",
   etaMinutes: "etaMinutes",

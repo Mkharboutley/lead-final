@@ -10,6 +10,7 @@ export interface Ticket {
   vehicle_info: string;
   guest_name: string;
   created_at: Timestamp;
+  updated_at?: Timestamp;
   status: 'running' | 'requested' | 'assigned' | 'completed' | 'cancelled';
   requested_at: Timestamp | null;
   assigned_at: Timestamp | null;

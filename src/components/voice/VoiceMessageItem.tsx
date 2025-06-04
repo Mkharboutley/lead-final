@@ -1,12 +1,11 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Play, Pause, Volume2 } from 'lucide-react';
-import { VoiceMessage } from '../types/VoiceMessage';
-import { useAudioPlayer } from '../hooks/useAudioPlayer';
-import { getRelativeTime } from '../utils/time';
-import { downloadVoiceFile } from '../services/storage';
+import { VoiceMessage } from '../../types/VoiceMessage';
+import { useAudioPlayer } from '../../hooks/useAudioPlayer';
+import { getRelativeTime } from '../../utils/time';
+import { downloadVoiceFile } from '../../services/storage';
 
 interface VoiceMessageItemProps {
   message: VoiceMessage;

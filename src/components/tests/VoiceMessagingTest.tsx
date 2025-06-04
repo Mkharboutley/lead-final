@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Clock, Zap } from 'lucide-react';
-import { updateTicketStatus } from '../services/ticketService';
-import VoiceRecorder from './VoiceRecorder';
-import { TestResult } from '../types/TestResult';
+import { updateTicketStatus } from '../../services/ticketService';
+import VoiceRecorder from '../voice/VoiceRecorder';
+import { TestResult } from '../../types/TestResult';
 
 interface VoiceMessagingTestProps {
   ticketId: string;

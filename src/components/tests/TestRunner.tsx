@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Play, Bell } from 'lucide-react';
-import { TestResult } from '../types/TestResult';
-import { updateTicketStatus } from '../services/ticketService';
+import { TestResult } from '../../types/TestResult';
+import { updateTicketStatus } from '../../services/ticketService';
 import { useToast } from '@/hooks/use-toast';
 
 interface TestRunnerProps {

@@ -1,17 +1,16 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TestTube } from 'lucide-react';
-import { subscribeToVoiceMessages } from '../services/realtime';
-import { subscribeToTicketUpdates } from '../services/ticketService';
-import { usePusherBeams } from '../hooks/usePusherBeams';
-import { TestResult } from '../types/TestResult';
-import TestConfiguration from './TestConfiguration';
-import TestRunner from './TestRunner';
-import VoiceMessagingTest from './VoiceMessagingTest';
-import TestResultsPanel from './TestResultsPanel';
+import { subscribeToVoiceMessages } from '../../services/realtime';
+import { subscribeToTicketUpdates } from '../../services/ticketService';
+import { usePusherBeams } from '../../hooks/usePusherBeams';
+import { TestResult } from '../../types/TestResult';
+import TestConfiguration from '../TestConfiguration';
+import TestRunner from '../tests/TestRunner';
+import VoiceMessagingTest from '../tests/VoiceMessagingTest';
+import TestResultsPanel from '../tests/TestResultsPanel';
 
 interface VoiceTestingPanelProps {
   ticketId: string;

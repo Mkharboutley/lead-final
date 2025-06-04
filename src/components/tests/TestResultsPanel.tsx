@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CheckCircle, AlertCircle, Clock } from 'lucide-react';
-import { TestResult } from '../types/TestResult';
+import { TestResult } from '../../types/TestResult';
 
 interface TestResultsPanelProps {
   testResults: TestResult[];

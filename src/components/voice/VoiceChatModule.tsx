@@ -1,14 +1,13 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, Volume2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { VoiceMessage } from '../types/VoiceMessage';
-import { subscribeToVoiceMessages } from '../services/realtime';
+import { VoiceMessage } from '../../types/VoiceMessage';
+import { subscribeToVoiceMessages } from '../../services/realtime';
 import VoiceRecorder from './VoiceRecorder';
 import VoiceMessageItem from './VoiceMessageItem';
-import { initializeFirebase } from '../services/firebase';
+import { initializeFirebase } from '../../services/firebase';
 
 interface VoiceChatModuleProps {
   ticketId: string;

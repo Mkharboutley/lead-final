@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
                           <Clock className="h-4 w-4 text-gray-400" />
                           <div className="flex-1">
                             <p className="text-sm font-medium">Ticket #{ticket.ticket_number}</p>
-                            <p className="text-xs text-gray-500">{ticket.guest_name}</p>
+                            <p className="text-xs text-gray-500">{ticket.car_model} - {ticket.plate_number}</p>
                           </div>
                           <Badge variant="outline">{ticket.status}</Badge>
                         </div>

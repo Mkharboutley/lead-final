@@ -83,11 +83,6 @@ const TicketListItem: React.FC<TicketListItemProps> = ({
       <CardContent className="pt-0">
         <div className="space-y-3 mb-4">
           <div className="flex items-center gap-2 text-sm">
-            <User className="h-4 w-4" />
-            <span className="font-medium">Guest:</span>
-            <span>{ticket.guest_name}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
             <Car className="h-4 w-4" />
             <span className="font-medium">Vehicle:</span>
             <span>{ticket.car_model} ({ticket.plate_number})</span>

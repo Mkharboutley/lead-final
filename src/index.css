@@ -32,8 +32,17 @@
     @apply border-border;
   }
   body {
-    @apply bg-[#0a0f1a] text-foreground overflow-x-hidden;
+    @apply bg-[#0a0f1a] text-foreground overflow-hidden;
   }
+  /* Allow scrolling only on dashboard */
+  .dashboard-content {
+    @apply overflow-auto;
+  }
+}
+
+/* Fixed height container for non-dashboard pages */
+.fixed-height-container {
+  @apply h-[100dvh] flex flex-col overflow-hidden;
 }
 
 /* Animated background gradients */

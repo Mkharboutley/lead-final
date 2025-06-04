@@ -14,13 +14,8 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
+  const isDashboard = location.pathname === '/dashboard';
   const { toast } = useToast();
-
-  const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: Home },
-    { name: 'Create Ticket', href: '/create-ticket', icon: Plus },
-    { name: 'Test Voice', href: '/test-voice', icon: TestTube },
-  ];
 
   const handleLogout = async () => {
     try {
@@ -45,8 +40,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black">
-      {/* Navigation Header with Glass Morphism */}
+    <div className={`fixed-height-container ${isDashboard ? 'dashboard-content' : ''}`}>
+      {/* Header */}
       <header className="bg-black/20 backdrop-blur-xl border-b border-white/10 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
@@ -57,7 +52,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
 
             <nav className="hidden md:flex space-x-1">
-              {navigation.map((item) => {
+              {[
+                { name: 'Dashboard', href: '/dashboard', icon: Home },
+                { name: 'Create Ticket', href: '/create-ticket', icon: Plus },
+                { name: 'Test Voice', href: '/test-voice', icon: TestTube },
+              ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link
@@ -92,18 +91,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1 relative">
         {children}
       </main>
 
-      {/* Footer with Glass Morphism */}
-      <footer className="bg-black/20 backdrop-blur-xl border-t border-white/10 mt-auto shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Footer */}
+      <footer className="bg-black/20 backdrop-blur-xl border-t border-white/10 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center">
-            <Logo className="w-24 mx-auto mb-4" />
-            <div className="text-sm text-gray-300">
-              © 2024 iVALET System. All rights reserved.
-            </div>
+            <Logo className="w-24 mx-auto" />
           </div>
         </div>
       </footer>

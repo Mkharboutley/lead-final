@@ -6,12 +6,23 @@ export const getUserRole = async (): Promise<'admin' | 'user' | null> => {
     const user = getCurrentUser();
     if (!user) return null;
     
-    // Get user role from custom claims or database
+    // First, try to get role from custom claims
     const idTokenResult = await user.getIdTokenResult();
     const role = idTokenResult.claims.role as string;
     
-    // Default to 'user' if no role is set
-    return role === 'admin' ? 'admin' : 'user';
+    if (role === 'admin') {
+      return 'admin';
+    }
+    
+    // Fallback: Check if email indicates admin status
+    const adminEmails = ['admin@ivalet.com']; // Add more admin emails here as needed
+    if (adminEmails.includes(user.email || '')) {
+      console.log('User identified as admin via email:', user.email);
+      return 'admin';
+    }
+    
+    // Default to user role
+    return 'user';
   } catch (error) {
     console.error('Error getting user role:', error);
     return 'user'; // Default to user role on error

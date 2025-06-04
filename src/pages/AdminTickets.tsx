@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import VoiceChatModule from '../components/voice/VoiceChatModule';
-import { TicketTabs } from '../components/TicketTabs';
+import TicketTabs from '../components/TicketTabs';
 import { useTickets } from '../hooks/useTickets';
 import { useNavigate } from 'react-router-dom';
 import { PlusCircle } from 'lucide-react';

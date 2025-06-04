@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -7,12 +8,12 @@ import { Clock, MapPin, User, Phone } from 'lucide-react';
 import StatusBadge from '../components/StatusBadge';
 import PriorityBadge from '../components/PriorityBadge';
 import VoiceChatModule from '../components/voice/VoiceChatModule';
-import { useTicketData } from '../hooks/useTicketData';
+import { useTicket } from '../hooks/useTicket';
 import CountdownTimer from '../components/CountdownTimer';
 
 const ClientTicket: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
-  const { ticket, isLoading, error } = useTicketData(ticketId || '');
+  const { ticket, isLoading, error } = useTicket(ticketId || '');
   const [isVoiceChatOpen, setIsVoiceChatOpen] = useState(false);
 
   useEffect(() => {
@@ -89,8 +90,12 @@ const ClientTicket: React.FC = () => {
 
               <div>
                 <h3 className="text-lg font-semibold">ETA</h3>
-                {ticket.eta_minutes ? (
-                  <CountdownTimer minutes={ticket.eta_minutes} />
+                {ticket.eta_minutes && ticket.assignedAt ? (
+                  <CountdownTimer 
+                    etaMinutes={ticket.eta_minutes} 
+                    assignedAt={new Date(ticket.assignedAt)}
+                    ticketId={ticket.id}
+                  />
                 ) : (
                   <p>ETA not set</p>
                 )}
@@ -107,7 +112,7 @@ const ClientTicket: React.FC = () => {
               <div>
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   Voice Messages
-                  <Badge variant="secondary">{ticket.voice_message_count}</Badge>
+                  <Badge variant="secondary">{ticket.voice_message_count || 0}</Badge>
                 </h3>
                 <Button onClick={handleOpenVoiceChat}>
                   Open Voice Chat

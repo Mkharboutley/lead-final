@@ -6,16 +6,16 @@ import TicketList from './TicketList';
 
 interface TicketTabsProps {
   tickets: Ticket[];
-  messageCounts: Record<string, number>;
-  onTicketSelect: (ticket: Ticket) => void;
-  onStatusUpdate: (ticketId: string, status: TicketStatus) => void;
-  onAssignWorker: (ticket: Ticket) => void;
+  messageCounts?: Record<string, number>;
+  onTicketSelect?: (ticket: Ticket) => void;
+  onStatusUpdate?: (ticketId: string, status: TicketStatus) => void;
+  onAssignWorker?: (ticket: Ticket) => void;
   selectedTicketId?: string;
 }
 
 const TicketTabs: React.FC<TicketTabsProps> = ({
   tickets,
-  messageCounts,
+  messageCounts = {},
   onTicketSelect,
   onStatusUpdate,
   onAssignWorker,

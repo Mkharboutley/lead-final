@@ -46,18 +46,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       {/* Minimal Glass Header */}
       <header className="relative z-10">
         <div className="absolute inset-0 bg-black/20 backdrop-blur-xl border-b border-white/10" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex-1 flex justify-center">
-            <Link to="/dashboard">
-              <Logo className="w-64" />
-            </Link>
-          </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <Link to="/dashboard">
+            <Logo className="w-32" />
+          </Link>
 
           <Button
             onClick={handleLogout}
             variant="outline"
             size="sm"
-            className="glass-button absolute right-4"
+            className="glass-button"
           >
             <LogOut className="h-4 w-4 ml-2" />
             تسجيل الخروج
